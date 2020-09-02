@@ -1,0 +1,2 @@
+target_companies = ["EDF", "Engie", "Louis Vitton"]
+timestep = 10
