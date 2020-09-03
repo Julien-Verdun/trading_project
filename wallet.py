@@ -1,4 +1,3 @@
-from stock import Stock
 
 class Wallet:
 

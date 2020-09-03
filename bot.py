@@ -17,11 +17,11 @@ class Bot:
         """
         strategy = Strategy(self.stocks)
         strats = strategy.run()
+        
         for i, strat in enumerate(strats):
             if strat == "buy":
-                self.stocks[i].buy(
-                    self.quantity, self.stocks[i].getCurrentValue())
-
+                self.stocks[i].buy(self.quantity, self.stocks[i].getCurrentValue())
+            
             elif strat == "sell":
                 self.stocks[i].sell(self.quantity)
 

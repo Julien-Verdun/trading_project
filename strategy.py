@@ -1,4 +1,3 @@
-import pandas as pd
 import numpy as np
 
 class Strategy:
@@ -7,7 +6,7 @@ class Strategy:
     """
     def __init__(self, stocks):
         self.__stocks = stocks
-        return
+        
 
     def run(self):
         result = []
@@ -44,5 +43,5 @@ class Strategy:
                 result.append("buy")
             else:
                 result.append("sell")
-        print(result)
+                
         return result
