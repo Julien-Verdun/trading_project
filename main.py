@@ -1,30 +1,27 @@
 """
-In the main file, the class are initialized and the bot 
-checks the market at regular time interval and buy and sell 
+In the main file, the class are initialized and the bot
+checks the market at regular time interval and buy and sell
 stocks in order to make the maximum of money.
 """
 
 import time
-from datetime import *
 from configuration import *
-from Bot import Bot
+#from bot import Bot
 
 
-bot = Bot(target_companies)
-
-# initialisation du temps
-t0 = datetime.timestamp('2019-01-01') + 24 * 3600 * 1000
-
+# time initialisation
+t0 = time.strptime(simulation_date, "%d-%m-%Y")
+t0 = time.mktime(t0)
 i = 0
+
+# box initialisation
+# bot = Bot(target_companies,)
+
+
 # toutes les timestep secondes
-while i < 4:
-    t0 += 24 * 3600 * 1000
-    print("t0", t0)
-
-    print("go : ", time.strftime("%Y-%m-%d", time.gmtime()))
-
-    time.sleep(5)
+while i < simulation_time:
+    t0 += 24 * 3600
+    print("go : ", time.strftime("%d-%m-%Y", time.gmtime(t0)))
+    # bot.run(strftime("%d-%m-%Y", time.gmtime(t0))
+    time.sleep(timelapse)
     i += 1
-
-
-# partir d'une date fixe, la passer en argument du bot etc, et incrementer le jour
