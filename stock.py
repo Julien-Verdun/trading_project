@@ -148,7 +148,6 @@ class Stock:
         plt.ylabel("Price ($) ")
         plt.show()
 
-
 """
 name = target_companies[0]
 

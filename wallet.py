@@ -1,6 +1,7 @@
 from stock import Stock
 
-class Walllet():
+
+class Wallet:
 
     def __init__(self, stocks):
 

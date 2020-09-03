@@ -1,4 +1,6 @@
 import pandas as pd
+
+
 class Strategy:
     """
     This class will define the buy and sell strategy

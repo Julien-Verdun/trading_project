@@ -3,34 +3,27 @@ from strategy import Strategy
 from wallet import Wallet
 
 
-class Bot():
+class Bot:
 
     def __init__(self, stocks_id):
         self.quantity = 1
         self.stocks_id = stocks_id
-
-        self.stocks = [stock(stock_id) for stock_id in self.stocks_id]
-        self.wallet = wallet(self.stocks)
-
-
+        self.stocks = [Stock(stock_id) for stock_id in self.stocks_id]
+        self.wallet = Wallet(self.stocks)
 
     def run(self):
         """
         Run strategy and update wallet 
         """
-        strats = Strategy(self.stocks)
+        strategy = Strategy(self.stocks)
+        strats = strategy.run()
                 
-        for i,strat in enumerate(strats):
+        for i, strat in enumerate(strats):
 
             if strat == "buy":
-                self.stocks[i].buy(self.quantity)
+                self.stocks[i].buy(self.quantity, self.stocks[i].getCurrentValue())
             
             elif strat == "sell":
                 self.stocks[i].sell(self.quantity)
 
         self.wallet.update()
-
-
-        
-
-        
