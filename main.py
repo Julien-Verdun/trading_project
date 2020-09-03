@@ -7,8 +7,10 @@ stocks in order to make the maximum of money.
 import time
 from datetime import *
 from configuration import *
-# from Bot import Bot
-# bot = Bot()
+from Bot import Bot
+
+
+bot = Bot(target_companies)
 
 # initialisation du temps
 t0 = datetime.timestamp('2019-01-01') + 24 * 3600 * 1000
