@@ -10,18 +10,18 @@ from configuration import *
 
 
 # time initialisation
-t0 = time.strptime(simulation_date, "%d-%m-%Y")
+t0 = time.strptime(simulation_date, "%Y-%m-%d")
 t0 = time.mktime(t0)
 i = 0
 
 # box initialisation
-# bot = Bot(target_companies,)
+# bot = Bot(target_companies,strftime("%Y-%m-%d", time.gmtime(t0)))
 
 
 # toutes les timestep secondes
 while i < simulation_time:
     t0 += 24 * 3600
-    print("go : ", time.strftime("%d-%m-%Y", time.gmtime(t0)))
-    # bot.run(strftime("%d-%m-%Y", time.gmtime(t0))
+    print("go : ", time.strftime("%Y-%m-%d", time.gmtime(t0)))
+    # bot.run(strftime("%Y-%m-%d", time.gmtime(t0)))
     time.sleep(timelapse)
     i += 1

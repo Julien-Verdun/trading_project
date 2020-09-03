@@ -1,4 +1,5 @@
 import yfinance as yf
+import time
 from configuration import *
 import matplotlib.pyplot as plt
 
@@ -9,13 +10,18 @@ class Stock:
     with an API
     """
 
-    def __init__(self, name, quantity=0, period="10d", time='2019-01-01'):
+    def __init__(self, name, date, quantity=0):
         self.__name = name
         self.__owned = False
         self.__quantity = quantity
         self.__cost_price = 0
         self.__stock = yf.Ticker(name)
-        self.__history = self.__stock.history(period=period)
+        self.__history = self.__stock.history(
+            start=time.strftime("%Y-%m-%d", time.gmtime(
+                time.mktime(time.strptime(date, "%Y-%m-%d")) - 30*24*3600)),
+            end=time.strftime("%Y-%m-%d", time.gmtime(
+                time.mktime(time.strptime(date, "%Y-%m-%d")) + simulation_time*24*3600))
+        )
         return
 
     def getStock(self):
@@ -34,8 +40,13 @@ class Stock:
         """
         Returns the value of the last 'close' value
         """
-        print("Current Value : ", self.__history['Close'][-1])
         return self.__history['Close'][-1]
+
+    def getDateValue(self, date):
+        """
+        Returns the value of the 'close' value for date "date" (format year - month - day)
+        """
+        return self.__history['Close'][date]
 
     def getOwned(self):
         """
@@ -158,7 +169,7 @@ class Stock:
 name = target_companies[0]
 
 
-stock = Stock(name, period="1mo")
+stock = Stock(name, simulation_date)
 
 
 stock.buy(2, 23.4)
@@ -167,3 +178,5 @@ stock.buy(4, 250)
 print("getCloseData : ", stock.getCloseData())
 
 print(stock.getGain())
+
+print(stock.getDateValue('2010-01-20'))
