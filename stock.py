@@ -9,9 +9,9 @@ class Stock:
     with an API
     """
 
-    def __init__(self, name, quantity=0, period="10d"):
+    def __init__(self, name, quantity=0, period="10d", time='2019-01-01'):
         self.__name = name
-        self.__owed = False
+        self.__owned = False
         self.__quantity = quantity
         self.__cost_price = 0
         self.__stock = yf.Ticker(name)
@@ -34,19 +34,20 @@ class Stock:
         """
         Returns the value of the last 'close' value
         """
+        print("Current Value : ", self.__history['Close'][-1])
         return self.__history['Close'][-1]
 
-    def getOwed(self):
+    def getOwned(self):
         """
         Returns a booleen, whether or not the stock is owned
         """
-        return self.__owed
+        return self.__owned
 
-    def setOwed(self, owed):
+    def setOwned(self, owned):
         """
         Sets a booleen, whether or not the stock is owned
         """
-        self.__owed = owed
+        self.__owned = owned
 
     def getQuantity(self):
         """
@@ -87,28 +88,33 @@ class Stock:
     def getCloseData(self):
         """
         Returns the 'close' column of the history data
+        and computes the variation between the open and close values.
         """
-        return self.__history['Close']
+        history = self.__history.copy()
+        history['Variation'] = 10000 * (
+            history['Close'] - history['Open'])/history['Close']
+        history['Variation'] = history['Variation'].astype(int)/10000
+        return history[['Close', 'Variation']]
 
-    def getSupport():
+    def getSupport(self):
         return
 
-    def getResistance():
+    def getResistance(self):
         return
 
-    def getGain():
+    def getGain(self):
         """
         Returns the gain earns with the stock
         """
-        return self.getQuantity()*(self.getCloseData()-self.getCostPrice())
+        return self.getQuantity()*(self.getCurrentValue()-self.getCostPrice())
 
     def buy(self, quantity, price):
         """
-        Whenever the stock is bought, the price and the quantity is updated with the 
+        Whenever the stock is bought, the price and the quantity is updated with the
         new quantiy and price
         """
-        if not self.getOwed():
-            self.setOwed(True)
+        if not self.getOwned():
+            self.setOwned(True)
             self.setQuantity(quantity)
             self.setCostPrice(price)
         else:
@@ -119,14 +125,14 @@ class Stock:
 
     def sell(self, quantity):
         """
-        Whenever the stock is sold, the quantity is updated with the 
+        Whenever the stock is sold, the quantity is updated with the
         new quantiy
         """
         if quantity > self.getQuantity():
             return None
         # sell all the stocks
         elif quantity == self.getQuantity():
-            self.setOwed(False)
+            self.setOwned(False)
             self.setQuantity(0)
             self.setCostPrice(0)
         # stell part of the stocks
@@ -149,20 +155,15 @@ class Stock:
         plt.show()
 
 
-"""
 name = target_companies[0]
 
 
 stock = Stock(name, period="1mo")
 
-print(stock.getCloseData())
 
 stock.buy(2, 23.4)
-print(stock.getCostPrice())
-print(stock.getQuantity())
 stock.buy(4, 250)
-print(stock.getCostPrice())
-print(stock.getQuantity())
 
-stock.plot()
-"""
+print("getCloseData : ", stock.getCloseData())
+
+print(stock.getGain())
