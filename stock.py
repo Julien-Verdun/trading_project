@@ -154,7 +154,11 @@ class Stock:
         plt.ylabel("Price ($) ")
         plt.show()
 
+<<<<<<< HEAD
 
+=======
+"""
+>>>>>>> f9cf52e7a0a48b055a1bafd9cedbcdaadc273f66
 name = target_companies[0]
 
 
