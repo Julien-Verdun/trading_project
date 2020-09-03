@@ -1,2 +1,3 @@
 target_companies = ["MSFT", "DAX"]
-timestep = 10
+simulation_time = 5
+timelapse = 1

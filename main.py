@@ -5,25 +5,25 @@ stocks in order to make the maximum of money.
 """
 
 import time
-from datetime import *
 from configuration import *
-from Bot import Bot
+# from bot import Bot
 
 
-bot = Bot(target_companies)
+#bot = Bot(target_companies)
 
 # initialisation du temps
-t0 = datetime.timestamp('2019-01-01') + 24 * 3600 * 1000
 
+#t0 = datetime.timestamp(datetime(2015, 1, 1)) + 24 * 3600 * 1000
+
+t0 = time.strptime("01-01-2010", "%d-%m-%Y")
+t0 = time.mktime(t0)
 i = 0
 # toutes les timestep secondes
-while i < 4:
-    t0 += 24 * 3600 * 1000
-    print("t0", t0)
+while i < simulation_time:
+    t0 += 24 * 3600
+    print("go : ", time.gmtime(t0))
 
-    print("go : ", time.strftime("%Y-%m-%d", time.gmtime()))
-
-    time.sleep(5)
+    time.sleep(timelapse)
     i += 1
 
 
