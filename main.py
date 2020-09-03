@@ -6,7 +6,7 @@ stocks in order to make the maximum of money.
 
 import time
 from configuration import *
-#from bot import Bot
+from bot import Bot
 
 
 # time initialisation
@@ -15,13 +15,13 @@ t0 = time.mktime(t0)
 i = 0
 
 # box initialisation
-# bot = Bot(target_companies,strftime("%Y-%m-%d", time.gmtime(t0)))
+bot = Bot(target_companies, time.strftime("%Y-%m-%d", time.gmtime(t0)))
 
 
 # toutes les timestep secondes
 while i < simulation_time:
     t0 += 24 * 3600
     print("go : ", time.strftime("%Y-%m-%d", time.gmtime(t0)))
-    # bot.run(strftime("%Y-%m-%d", time.gmtime(t0)))
+    bot.run(time.strftime("%Y-%m-%d", time.gmtime(t0)))
     time.sleep(timelapse)
     i += 1

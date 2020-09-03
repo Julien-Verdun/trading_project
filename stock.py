@@ -166,6 +166,7 @@ class Stock:
         plt.show()
 
 
+"""
 name = target_companies[0]
 
 
@@ -180,3 +181,4 @@ print("getCloseData : ", stock.getCloseData())
 print(stock.getGain())
 
 print(stock.getDateValue('2010-01-20'))
+"""
