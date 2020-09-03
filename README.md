@@ -1,4 +1,4 @@
-# trading_project
+# Trading bot
 
 Creation of a trading bot.
 
@@ -7,3 +7,7 @@ Creation of a trading bot.
 - Baptiste Desarnauts
 - Maxime Peter
 - Julien Verdun
+
+## Stocks API
+
+**yfinance** module of Python.
