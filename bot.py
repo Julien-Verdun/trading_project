@@ -2,6 +2,7 @@ from stock import Stock
 from strategy import Strategy
 from strategy_naive import StrategyNaive
 from wallet import Wallet
+from configuration import *
 
 
 class Bot:
@@ -16,27 +17,42 @@ class Bot:
         self.initial_account = self.wallet.account
         self.last_account = self.initial_account
 
+    def stock_state(self):
+        for stock in self.stocks:
+            print(stock.print())
+        return
+
     def run(self, date):
         """
         Run strategy and update wallet 
         """
 
         if self.stocks[0].getDateValue(date):
-            # strategy = Strategy(self.stocks, date)
-            strategy = StrategyNaive(self.stocks, date)
+            if selected_strategy == "naive":
+                strategy = StrategyNaive(self.stocks, date)
+            else:
+                strategy = Strategy(self.stocks, date)
             strats = strategy.run()
+
+            self.wallet.save_last_account()
 
             for i, strat in enumerate(strats):
                 if strat == "buy":
                     self.stocks[i].buy(
                         self.quantity, self.stocks[i].getDateValue(date))
-
-                elif strat == "sell":
-                    self.stocks[i].sell(self.quantity)
-
+                    print("Buy " + self.stocks[i].getName())
+                    print("BUY")
+                elif strat == "sell" and self.stocks[i].getQuantity() > 0:
+                    self.stocks[i].sell()
+                    self.wallet.sell(i, date)
+                    print("Sell " + self.stocks[i].getName())
+                else:
+                    print("No go")
             self.wallet.update(date)
-            self.last_account = self.wallet.account
-            print("Date : ", date, "Wallet account : ", self.wallet.account, "Variation with previous day : ",
-                  int(10000*(self.wallet.account-self.wallet.last_account)/self.wallet.account)/100)
-        else:
-            print(date, " is not a trading day ! ")
+
+            # self.wallet.update(date)
+            self.last_account = self.wallet.virtual_account
+            print("Date : ", date, "Wallet account : ", self.wallet.virtual_account, "\nVariation with previous day : ",
+                  int(10000*(self.wallet.virtual_account-self.wallet.last_account)/self.wallet.virtual_account)/100)
+        # else:
+        #     print(date, " is not a trading day ! ")

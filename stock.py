@@ -24,6 +24,9 @@ class Stock:
         )
         return
 
+    def print(self):
+        return "Stock " + self.__name + "\nQuantity : " + str(self.__quantity) + "\nPrice : " + str(self.__cost_price)
+
     def getStock(self):
         """
         Returns the stock object
@@ -110,11 +113,11 @@ class Stock:
     def getResistance(self):
         return
 
-    def getGain(self):
+    def getGain(self, date):
         """
         Returns the gain earns with the stock
         """
-        return self.getQuantity()*(self.getCurrentValue()-self.getCostPrice())
+        return self.getQuantity()*(self.getDateValue(date)-self.getCostPrice())
 
     def buy(self, quantity, price):
         """
@@ -131,12 +134,12 @@ class Stock:
             self.setQuantity(quantity+self.getQuantity())
         return
 
-    def sell(self, quantity):
+    def sell(self, quantity=None):
         """
         Whenever the stock is sold, the quantity is updated with the
         new quantiy
         """
-        if quantity > self.getQuantity():
+        if quantity == None or quantity > self.getQuantity():
             return None
         # sell all the stocks
         elif quantity == self.getQuantity():
@@ -173,9 +176,6 @@ stock = Stock(name, simulation_date)
 stock.buy(2, 23.4)
 stock.buy(4, 250)
 
-print("getCloseData : ", stock.getCloseData())
 
-print(stock.getGain())
-
-print(stock.getDateValue('2010-01-20'))
+stock.plot()
 """

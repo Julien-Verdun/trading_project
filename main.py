@@ -21,10 +21,13 @@ bot = Bot(target_companies, time.strftime("%Y-%m-%d", time.gmtime(t0)))
 # toutes les timestep secondes
 while i < simulation_time:
     t0 += 24 * 3600
-    print("go : ", time.strftime("%Y-%m-%d", time.gmtime(t0)))
+    print("Day : ", time.strftime("%Y-%m-%d", time.gmtime(t0)))
     bot.run(time.strftime("%Y-%m-%d", time.gmtime(t0)))
     time.sleep(timelapse)
     i += 1
+
+
+bot.stock_state()
 
 
 print("Bilan de la simulation : ")
