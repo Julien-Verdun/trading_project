@@ -20,12 +20,22 @@ class Stock:
             start=time.strftime("%Y-%m-%d", time.gmtime(
                 time.mktime(time.strptime(date, "%Y-%m-%d")) - 30*24*3600)),
             end=time.strftime("%Y-%m-%d", time.gmtime(
-                time.mktime(time.strptime(date, "%Y-%m-%d")) + simulation_time*24*3600))
+                time.mktime(time.strptime(date, "%Y-%m-%d")) + (simulation_time+2)*24*3600))
         )
         return
 
-    def show(self):
-        return "Stock " + self.__name + "\nQuantity : " + str(self.__quantity) + "\nPrice : " + str(self.__cost_price)
+    def show(self, date):
+        # if self.getDateValue(date) != None:
+        #     return "\n----------Stock " + self.__name + "----------\nQuantity : " + str(self.__quantity) + "\nPrice : " + str(self.__cost_price) + "\nPrice difference : " + str(self.getQuantity()*(self.getDateValue(date)-self.__cost_price)) + " euros\n"
+
+        i = 0
+        while self.getDateValue(time.strftime("%Y-%m-%d", time.gmtime(
+                time.mktime(time.strptime(date, "%Y-%m-%d")) - i*24*3600))) == None:
+            i += 1
+
+        return "\n----------Stock " + self.__name + "----------\nQuantity : " + str(self.__quantity) + "\nPrice : " + str(self.__cost_price) + "\nPrice difference : " + str(self.getQuantity()*(self.getDateValue(
+            time.strftime("%Y-%m-%d", time.gmtime(
+                time.mktime(time.strptime(date, "%Y-%m-%d")) - i*24*3600)))-self.__cost_price)) + " euros\n"
 
     def getStock(self):
         """
@@ -43,6 +53,7 @@ class Stock:
         """
         Returns the value of the 'close' value for date "date" (format year - month - day)
         """
+        # print("getDateValue ", date, self.__history.index.tolist()[-1])
         if date in self.__history.index:
             return self.__history['Close'][date]
         else:
@@ -156,8 +167,7 @@ class Stock:
         Plot the evolution of the stock's price among time
         """
         plt.figure()
-        print(self.getHistory().index)
-        plt.plot(self.getHistory().index, self.getCloseData(), '--*')
+        plt.plot(self.getCloseData()["Close"], '--*')
         plt.plot(self.getHistory().index, [self.getCostPrice(
         ) for k in range(len(self.getHistory().index))], '-')
         plt.title(self.getName() + " : Stock evolution")
@@ -166,16 +176,13 @@ class Stock:
         plt.show()
 
 
-"""
-name = target_companies[0]
-
+#name = target_companies[0]
+name = "TSLA"
 
 stock = Stock(name, simulation_date)
 
 
-stock.buy(2, 23.4)
-stock.buy(4, 250)
+stock.getHistory()
 
 
 stock.plot()
-"""

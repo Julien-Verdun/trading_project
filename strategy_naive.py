@@ -23,7 +23,6 @@ class StrategyNaive:
 
             # mean variation
             mean_var = 0
-            moving_window = 30
             for i in range(len(historical_data["Variation"].tolist())):
                 if historical_data.index[i].timestamp() <= time.mktime(time.strptime(self.__date, "%Y-%m-%d")):
                     if (time.mktime(time.strptime(self.__date, "%Y-%m-%d"))-historical_data.index[i].timestamp()) / (24 * 3600) <= moving_window:
