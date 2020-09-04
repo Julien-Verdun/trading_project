@@ -27,7 +27,7 @@ while i < simulation_time:
     i += 1
 
 
-bot.stock_state()
+bot.stock_state(time.strftime("%Y-%m-%d", time.gmtime(t0)))
 
 
 print("Bilan de la simulation : ")
