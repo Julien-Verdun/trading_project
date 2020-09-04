@@ -25,3 +25,8 @@ while i < simulation_time:
     bot.run(time.strftime("%Y-%m-%d", time.gmtime(t0)))
     time.sleep(timelapse)
     i += 1
+
+
+print("Bilan de la simulation : ")
+print("Montant initial : ", bot.initial_account)
+print("Montant final : ", bot.last_account)

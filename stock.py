@@ -36,17 +36,14 @@ class Stock:
         """
         return self.__stock.info
 
-    def getCurrentValue(self):
-        """
-        Returns the value of the last 'close' value
-        """
-        return self.__history['Close'][-1]
-
     def getDateValue(self, date):
         """
         Returns the value of the 'close' value for date "date" (format year - month - day)
         """
-        return self.__history['Close'][date]
+        if date in self.__history.index:
+            return self.__history['Close'][date]
+        else:
+            return None
 
     def getOwned(self):
         """
