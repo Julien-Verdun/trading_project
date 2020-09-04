@@ -10,4 +10,4 @@ selected_strategy = "naive"  # "classic"
 # pour une variation moyenne des gains supérieurs à upper, on achète, pour une
 # variation moyenne des gains inférieurs à lower on vends
 lower = -2
-upper = 10
+upper = 2

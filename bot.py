@@ -41,7 +41,6 @@ class Bot:
                     self.stocks[i].buy(
                         self.quantity, self.stocks[i].getDateValue(date))
                     print("Buy " + self.stocks[i].getName())
-                    print("BUY")
                 elif strat == "sell" and self.stocks[i].getQuantity() > 0:
                     self.stocks[i].sell()
                     self.wallet.sell(i, date)
