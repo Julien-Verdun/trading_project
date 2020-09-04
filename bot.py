@@ -19,7 +19,7 @@ class Bot:
 
     def stock_state(self):
         for stock in self.stocks:
-            print(stock.print())
+            print(stock.show())
         return
 
     def run(self, date):

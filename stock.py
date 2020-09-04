@@ -24,7 +24,7 @@ class Stock:
         )
         return
 
-    def print(self):
+    def show(self):
         return "Stock " + self.__name + "\nQuantity : " + str(self.__quantity) + "\nPrice : " + str(self.__cost_price)
 
     def getStock(self):
