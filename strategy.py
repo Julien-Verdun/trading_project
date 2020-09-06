@@ -35,9 +35,9 @@ class Strategy:
                 else:
                     break
             avg_gain, avg_loss = abs(np.mean(pos_var)), abs(np.mean(neg_var))
-            # rsi_step_one = 100 * (1 - (1/(1 + (avg_gain/avg_loss))))
             rsi_step_one = 100 * avg_gain / (avg_gain + avg_loss)
             stock_price = stock.getDateValue(self.__date)
+            print(rsi_step_one)
 
             if self.__buy_threshold < rsi_step_one < self.__sell_threshold:
                 result.append(["no go", np.nan])
@@ -56,5 +56,5 @@ class Strategy:
                 if amount >= stock_price:
                     result.append(["sell", nb_stocks])
                 else:
-                    result.append(["no go", np.nan])
+                    result.append(["no go", nb_stocks])
         return result

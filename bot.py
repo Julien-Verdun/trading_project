@@ -12,7 +12,7 @@ class Bot:
         self.stocks_id = stocks_id
         self.stocks = [Stock(stock_id, quantity=0, date=date)
                        for stock_id in self.stocks_id]
-        self.wallet = Wallet(self.stocks)
+        self.wallet = Wallet(self.stocks, 3000)
         # self.wallet.update(date)
         self.initial_account = self.wallet.virtual_account
         self.last_account = self.initial_account
@@ -36,7 +36,7 @@ class Bot:
                 strategy = StrategyNaive(
                     self.stocks, date, self.wallet.available_cash)
             else:
-                strategy = Strategy(self.stocks, date)
+                strategy = Strategy(self.stocks, date, 1000, 60, 40)
             strats = strategy.run()
 
             self.wallet.save_last_account()
