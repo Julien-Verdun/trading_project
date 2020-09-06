@@ -7,7 +7,9 @@ stocks in order to make the maximum of money.
 import time
 from configuration import *
 from bot import Bot
+import sys
 
+selected_strategy = sys.argv[1]
 
 # time initialisation
 t0 = time.strptime(simulation_date, "%Y-%m-%d")
@@ -22,7 +24,7 @@ bot = Bot(target_companies, time.strftime("%Y-%m-%d", time.gmtime(t0)))
 while i < simulation_time:
     t0 += 24 * 3600
     print("Day : ", time.strftime("%Y-%m-%d", time.gmtime(t0)))
-    bot.run(time.strftime("%Y-%m-%d", time.gmtime(t0)))
+    bot.run(time.strftime("%Y-%m-%d", time.gmtime(t0)), selected_strategy)
     time.sleep(timelapse)
     i += 1
 

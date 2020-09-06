@@ -2,7 +2,7 @@ from stock import Stock
 from strategy import Strategy
 from strategy_naive import StrategyNaive
 from wallet import Wallet
-from configuration import *
+# from configuration import *
 
 
 class Bot:
@@ -25,12 +25,13 @@ class Bot:
         print("Stocks amount", self.wallet.stocks_amount)
         return
 
-    def run(self, date):
+    def run(self, date, selected_strategy):
         """
         Run strategy and update wallet 
         """
 
         if self.stocks[0].getDateValue(date):
+            # print(selected_strategy)
             if selected_strategy == "naive":
                 strategy = StrategyNaive(
                     self.stocks, date, self.wallet.available_cash)

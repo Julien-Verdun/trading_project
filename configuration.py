@@ -7,7 +7,7 @@ timelapse = 0.1
 simulation_date = "2020-01-01"
 
 
-selected_strategy = "naive"
+selected_strategy = "classic"  # "naive"
 
 # "classic"
 
