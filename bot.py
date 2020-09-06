@@ -68,7 +68,8 @@ class Bot:
                 elif strat[0] == "sell" and self.stocks[i].getQuantity() > 0:
                     self.stocks[i].sell()
                     self.wallet.sell(i, date)
-                    print("Sell " + self.stocks[i].getName())
+                    print(
+                        "Sell " + str(self.stocks[i].getQuantity()) + " stock(s) of " + self.stocks[i].getName())
                 else:
                     print("No go")
 
