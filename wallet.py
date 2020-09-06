@@ -33,7 +33,7 @@ class Wallet:
         # self.virtual_account = self.account
         self.stocks_amount = 0
         for stock in self.stocks:
-            self.stocks_amount += stock.getDateValue(date)
+            self.stocks_amount += stock.getQuantity()*stock.getDateValue(date)
         self.virtual_account = self.available_cash + self.stocks_amount
 
     def save_last_account(self):

@@ -176,6 +176,7 @@ class Stock:
         plt.show()
 
 
+"""
 #name = target_companies[0]
 name = "TSLA"
 
@@ -186,3 +187,4 @@ stock.getHistory()
 
 
 stock.plot()
+"""

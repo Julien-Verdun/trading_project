@@ -20,6 +20,8 @@ class Bot:
     def stock_state(self, date):
         for stock in self.stocks:
             print(stock.show(date))
+        print("Available cash", self.wallet.available_cash)
+        print("Stocks amount", self.wallet.stocks_amount)
         return
 
     def run(self, date):
