@@ -2,7 +2,7 @@ target_companies = ["MSFT", "ADP", "ATOS",
                     "TSLA", "AAPL",
                     "AIR", "OR"]
 #"PARRO", "UBI", "LVMH",
-simulation_time = 40
+simulation_time = 30
 timelapse = 0.1
 simulation_date = "2020-01-01"
 

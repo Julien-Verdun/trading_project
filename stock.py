@@ -34,9 +34,14 @@ class Stock:
                 time.mktime(time.strptime(date, "%Y-%m-%d")) - i*24*3600))) == None:
             i += 1
 
-        return "\n----------Stock " + self.__name + "----------\nQuantity : " + str(self.__quantity) + "\nPrice : " + str(self.__cost_price) + "\nPrice difference : " + str(self.getQuantity()*(self.getDateValue(
-            time.strftime("%Y-%m-%d", time.gmtime(
-                time.mktime(time.strptime(date, "%Y-%m-%d")) - i*24*3600)))-self.__cost_price)) + " euros\n"
+        return "\n----------Stock " + self.__name + "----------\nQuantity : " + str(self.__quantity) + \
+            "\nPrice : " + str(self.__cost_price) + \
+            "\nInitial price : " + str(self.getDateValue(
+                time.strftime("%Y-%m-%d", time.gmtime(
+                    time.mktime(time.strptime(date, "%Y-%m-%d")) - i*24*3600)))) + \
+            "\nPrice difference : " + str(self.getQuantity()*(self.getDateValue(
+                time.strftime("%Y-%m-%d", time.gmtime(
+                    time.mktime(time.strptime(date, "%Y-%m-%d")) - i*24*3600)))-self.__cost_price)) + " euros\n"
 
     def getStock(self):
         """
@@ -71,6 +76,9 @@ class Stock:
             return None
 
     def getMeanVariation(self, date):
+        """
+        Returns the mean value of the stock variation on a moving_window period before date
+        """
         historical_data = self.getCloseData()
         mean_var = 0
         for i in range(len(historical_data["Variation"].tolist())):

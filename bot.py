@@ -76,5 +76,3 @@ class Bot:
             self.last_account = self.wallet.virtual_account
             print("Date : ", date, "Wallet account : ", self.wallet.virtual_account, ", Stocks amount : ", self.wallet.stocks_amount, ", Available cash : ", self.wallet.available_cash, "\nVariation with previous day : ",
                   int(10000*(self.wallet.virtual_account-self.wallet.last_account)/self.wallet.virtual_account)/100)
-        # else:
-        #     print(date, " is not a trading day ! ")
