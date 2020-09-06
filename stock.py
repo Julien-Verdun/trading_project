@@ -2,6 +2,7 @@ import yfinance as yf
 import time
 from configuration import *
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 class Stock:
@@ -58,6 +59,28 @@ class Stock:
             return self.__history['Close'][date]
         else:
             return None
+
+    def getDateVariation(self, date):
+        """
+        Returns the value of the 'variation' value for date "date" (format year - month - day)
+        """
+        # print("getDateValue ", date, self.__history.index.tolist()[-1])
+        if date in self.__history.index:
+            return self.getCloseData()['Variation'][date]
+        else:
+            return None
+
+    def getMeanVariation(self, date):
+        historical_data = self.getCloseData()
+        mean_var = 0
+        for i in range(len(historical_data["Variation"].tolist())):
+            if historical_data.index[i].timestamp() <= time.mktime(time.strptime(date, "%Y-%m-%d")):
+                if (time.mktime(time.strptime(date, "%Y-%m-%d"))-historical_data.index[i].timestamp()) / (24 * 3600) <= moving_window:
+                    mean_var += 100 * \
+                        historical_data["Variation"].tolist()[i]
+            else:
+                break
+        return np.mean(mean_var)
 
     def getOwned(self):
         """
