@@ -10,4 +10,15 @@ Creation of a trading bot.
 
 ## Stocks API
 
-**yfinance** module of Python.
+For this project we use **yfinance** API of Python.
+
+In a command prompt, run the command :
+
+```
+python main.py [strategy]
+```
+
+with strategy the strategy name :
+
+- classic
+- naive

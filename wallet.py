@@ -45,7 +45,7 @@ class Wallet:
     def sell(self, i, date):
         self.available_cash += self.stocks[i].getQuantity() * \
             self.stocks[i].getDateValue(date)
-        # self.stocks_amount -= self.stocks[i].getDateValue(date)
+        self.stocks_amount -= self.stocks[i].getDateValue(date)
         # self.account += self.stocks[i].getGain(date)
 
     def buy(self, i, date, quantity=1):
