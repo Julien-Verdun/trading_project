@@ -4,7 +4,7 @@ target_companies = ["MSFT", "ADP", "ATOS",
 #"PARRO", "UBI", "LVMH",
 simulation_time = 30
 timelapse = 0.1
-simulation_date = "2020-01-01"
+simulation_date = "2020-01-01"  # year - month - day
 
 
 selected_strategy = "classic"  # "naive"
