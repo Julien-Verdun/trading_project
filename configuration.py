@@ -20,3 +20,8 @@ decrease_window = 3
 
 # allows to print some logs
 SHOW_LOG = False
+
+
+# commission
+FIXED_COMMISSION = 3
+PROPORTIONNAL_COMISSION = 0.01

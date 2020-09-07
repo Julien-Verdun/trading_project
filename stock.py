@@ -17,6 +17,9 @@ class Stock:
         self.__owned = False
         self.__quantity = quantity
         self.__cost_price = 0
+        self.__fixed_commission = FIXED_COMMISSION  # in euros
+        # rate, proportionnal to stock price
+        self.__proportionnal_commission = PROPORTIONNAL_COMISSION
         self.__stock = yf.Ticker(name)
         # print(increase_date(date, -(moving_window + decrease_window)))
 
@@ -138,6 +141,12 @@ class Stock:
         """
         self.__cost_price = cost_price
 
+    def getFixedCommission(self):
+        return self.__fixed_commission
+
+    def getProportionnalCommission(self):
+        return self.__proportionnal_commission
+
     def getName(self):
         """
         Returns the stock's name
@@ -219,6 +228,7 @@ class Stock:
         plt.show()
 
 
+"""
 #name = target_companies[0]
 name = "TSLA"
 
@@ -231,3 +241,4 @@ for elt in info:
 
 
 # stock.plot()
+"""

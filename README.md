@@ -37,9 +37,19 @@ Basically, this strategy buys stocks that are increasing.
 
 ## Stock model
 
-### Commission
+### Frais de courtage
 
 Les frais de courtage sont des frais de transaction, c'est-à-dire qu'ils sont prélevés pour chaque transaction (pour un achat comme pour une vente) par l'intermédiaire qui exécute cette transaction.
 
 - les frais de courtage proportionnelles peuvent s'élever à 1 % du montant jusqu'à un plafond déterminé, puis baisser à 0,8 % du montant au-delà de ce plafond.
 - les frais de courtage forfaitaires peuvent être de 3 € par transaction, quel que soit le montant de la transaction.
+
+### Droits de garde
+
+Les droits de garde sont des frais de Bourse prélevés par l'organisme qui conserve les produits financiers. C'est organisme est généralement un intermédiaire financier.
+
+Le montant des droits de garde dépend généralement du nombre de lignes que contient le portefeuille boursier. Plus votre portefeuille contient de valeurs différentes, donc de lignes, plus les frais de garde sont élevés.
+
+### Commission
+
+Une commission est une somme prélevée pour une opération particulière. Les commissions sur opérations de Bourse peuvent être de différentes natures.

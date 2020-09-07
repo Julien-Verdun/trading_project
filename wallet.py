@@ -21,11 +21,14 @@ class Wallet:
         self.last_account = self.virtual_account
 
     def buying_autorisation(self, i, quantity, date):
-        return self.available_cash > quantity * self.stocks[i].getDateValue(date)
+        # enough to cash buy stock's quantity, taking commissions into account
+        return self.available_cash > quantity * (self.stocks[i].getDateValue(date) * (1 + self.stocks[i].getProportionnalCommission()) + self.stocks[i].getFixedCommission())
 
     def sell(self, i, date):
         self.available_cash += self.stocks[i].getQuantity() * \
-            self.stocks[i].getDateValue(date)
+            (self.stocks[i].getDateValue(
+                date) * (1 - self.stocks[i].getProportionnalCommission()) - self.stocks[i].getFixedCommission())
 
     def buy(self, i, date, quantity=1):
-        self.available_cash -= quantity * self.stocks[i].getDateValue(date)
+        self.available_cash -= quantity * (self.stocks[i].getDateValue(date) * (
+            1 + self.stocks[i].getProportionnalCommission()) + self.stocks[i].getFixedCommission())
