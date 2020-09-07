@@ -2,6 +2,8 @@ import yfinance as yf
 import time
 #from configuration import *
 import matplotlib.pyplot as plt
+import numpy as np
+from utils import *
 
 
 class Stock:
@@ -16,26 +18,25 @@ class Stock:
         self.__quantity = quantity
         self.__cost_price = 0
         self.__stock = yf.Ticker(name)
+        # print(increase_date(date, -(moving_window + decrease_window)))
+
         self.__history = self.__stock.history(
-            start=time.strftime("%Y-%m-%d", time.gmtime(
-                time.mktime(time.strptime(date, "%Y-%m-%d")) - 30*24*3600)),
-            end=time.strftime("%Y-%m-%d", time.gmtime(
-                time.mktime(time.strptime(date, "%Y-%m-%d")) + (simulation_time+2)*24*3600))
+            start=increase_date(date, -(moving_window + decrease_window)),
+            end=increase_date(date, simulation_time+2)
         )
+        self.__historical_data = self.getCloseData()
         return
 
     def show(self, date):
-        # if self.getDateValue(date) != None:
-        #     return "\n----------Stock " + self.__name + "----------\nQuantity : " + str(self.__quantity) + "\nPrice : " + str(self.__cost_price) + "\nPrice difference : " + str(self.getQuantity()*(self.getDateValue(date)-self.__cost_price)) + " euros\n"
-
         i = 0
-        while self.getDateValue(time.strftime("%Y-%m-%d", time.gmtime(
-                time.mktime(time.strptime(date, "%Y-%m-%d")) - i*24*3600))) == None:
+        while self.getDateValue(increase_date(date, -i)) == None:
             i += 1
 
-        return "\n----------Stock " + self.__name + "----------\nQuantity : " + str(self.__quantity) + "\nPrice : " + str(self.__cost_price) + "\nPrice difference : " + str(self.getQuantity()*(self.getDateValue(
-            time.strftime("%Y-%m-%d", time.gmtime(
-                time.mktime(time.strptime(date, "%Y-%m-%d")) - i*24*3600)))-self.__cost_price)) + " euros\n"
+        return "\n----------Stock " + self.__name + "----------\nQuantity : " + str(self.__quantity) + \
+            "\nPrice : " + str(self.__cost_price) + \
+            "\nInitial price : " + str(self.getDateValue(increase_date(date, -i))) + \
+            "\nPrice difference : " + str(self.getQuantity()*(self.getDateValue(
+                increase_date(date, -i))-self.__cost_price)) + " euros\n"
 
     def getStock(self):
         """
@@ -53,11 +54,74 @@ class Stock:
         """
         Returns the value of the 'close' value for date "date" (format year - month - day)
         """
-        # print("getDateValue ", date, self.__history.index.tolist()[-1])
         if date in self.__history.index:
             return self.__history['Close'][date]
         else:
             return None
+
+    def getDateVariation(self, date):
+        """
+        Returns the value of the 'variation' value for date "date" (format year - month - day)
+        """
+        if date in self.__history.index:
+            return self.__historical_data['Variation'][date]
+        else:
+            # print("!!!!!!!!!!!!!!!!!!!", date)
+            return None
+
+    def getMeanVariation(self, date):
+        """
+        Returns the mean value of the stock variation on a moving_window period before date
+        """
+        mean_var = 0
+        for i in range(len(self.__historical_data["Variation"].tolist())):
+            if self.__historical_data.index[i].timestamp() <= time.mktime(time.strptime(date, "%Y-%m-%d")):
+                if (time.mktime(time.strptime(date, "%Y-%m-%d"))-self.__historical_data.index[i].timestamp()) / (24 * 3600) <= moving_window:
+                    mean_var += 100 * \
+                        self.__historical_data["Variation"].tolist()[i]
+            else:
+                break
+        return np.mean(mean_var)
+
+    def getRSI(self, date, nb_pts):
+        historical_data = self.__historical_data
+        pos_var, neg_var = [], []
+
+        # Calculation of the RSI
+        for i in range(len(historical_data["Variation"].tolist())):
+            if time.mktime(time.strptime(date, "%Y-%m-%d")) <= historical_data.index[i].timestamp() <= time.mktime(time.strptime(date, "%Y-%m-%d")):
+                if historical_data["Variation"].tolist()[i] > 0:
+                    pos_var.append(
+                        historical_data["Variation"].tolist()[i])
+                    neg_var.append(0)
+                else:
+                    neg_var.append(
+                        historical_data["Variation"].tolist()[i])
+                    pos_var.append(0)
+            else:
+                break
+        avg_gain, avg_loss = abs(np.mean(pos_var)), abs(np.mean(neg_var))
+        return 100 * avg_gain / (avg_gain + avg_loss)
+
+    def isDecreasingStock(self, date):
+        """
+        Returns wheter or not the stock price is decreasing since a least "decrease_window"
+        days and just increased at date "date"
+        """
+        i = 0
+        j = 0
+        while i <= decrease_window:
+            if self.getDateVariation(increase_date(date, -i-j-1)) != None:
+                if self.getDateVariation(increase_date(date, -i-j-1)) > 0:
+                    return False
+                i += 1
+            else:
+                j += 1
+        i = 0
+        while self.getDateVariation(increase_date(date, -i)) == None:
+            i += 1
+        return self.getDateVariation(increase_date(date, i)) > 0
+
 
     def getOwned(self):
         """
@@ -167,7 +231,7 @@ class Stock:
         Plot the evolution of the stock's price among time
         """
         plt.figure()
-        plt.plot(self.getCloseData()["Close"], '--*')
+        plt.plot(self.__historical_data["Close"], '--*')
         plt.plot(self.getHistory().index, [self.getCostPrice(
         ) for k in range(len(self.getHistory().index))], '-')
         plt.title(self.getName() + " : Stock evolution")
@@ -181,8 +245,10 @@ class Stock:
 
 #stock = Stock(name, simulation_date)
 
+#info = stock.getInfo()
+#for elt in info:
+#    print(elt, "    -   ", info[elt])
+# stock.getHistory()
 
-#stock.getHistory()
 
-
-#stock.plot()
+# stock.plot()

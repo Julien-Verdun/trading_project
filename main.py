@@ -6,8 +6,13 @@ stocks in order to make the maximum of money.
 
 import time
 from bot import Bot
+<<<<<<< HEAD
 import argparse 
+=======
+import sys
+>>>>>>> 98e83226ed3c9015bbec6a5bfc5253117fd5e571
 
+selected_strategy = sys.argv[1]
 
 DEFAULT_STOCKS = ["MSFT", "ADP", "ATOS", "TSLA", "AAPL", "AIR", "OR"]
 DEFAULT_SIMULATION_TIME = 40

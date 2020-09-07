@@ -12,7 +12,6 @@ class Bot:
         self.stocks = [Stock(name=stock_id, quantity=1, date=date, simulation_time=simulation_time)
                        for stock_id in self.stocks_id]
         self.wallet = Wallet(self.stocks)
-        # self.wallet.update(date)
         self.initial_account = self.wallet.virtual_account
         self.last_account = self.initial_account
 
@@ -20,6 +19,8 @@ class Bot:
         for stock in self.stocks:
 
             print(stock.show(date))
+        print("Available cash", self.wallet.available_cash)
+        print("Stocks amount", self.wallet.stocks_amount)
         return
 
     def run(self, date, strategy_name, log):
@@ -31,22 +32,28 @@ class Bot:
             if strategy_name == "naive":
                 strategy = StrategyNaive(self.stocks, date)
             else:
-                strategy = Strategy(self.stocks, date)
+                strategy = Strategy(self.stocks, date, 1000, 60, 40)
             strats = strategy.run()
 
             self.wallet.save_last_account()
 
             for i, strat in enumerate(strats):
                 # if the strategie says "buy" and the amount is available
-                if strat == "buy" and self.wallet.buying_autorisation(i, 1, date):
+                if strat[0] == "buy" and strat[1] > 0 and self.wallet.buying_autorisation(i, strat[1], date):
+                    if SHOW_LOG:
+                        print(
+                            "Buy " + str(strat[1]) + " stock(s) of " + self.stocks[i].getName())
+                    self.wallet.buy(i, date, strat[1])
                     self.stocks[i].buy(
                         self.quantity, self.stocks[i].getDateValue(date))
                     self.wallet.buy(i, date)
                     if log:
                         print("Buy " + self.stocks[i].getName())
                 # if the strategie says "sell"
-                elif strat == "sell" and self.stocks[i].getQuantity() > 0:
-                    self.stocks[i].sell()
+                elif strat[0] == "sell" and self.stocks[i].getQuantity() > 0:
+                    if SHOW_LOG:
+                        print(
+                            "Sell " + str(self.stocks[i].getQuantity()) + " stock(s) of " + self.stocks[i].getName())
                     self.wallet.sell(i, date)
                     if log:
                         print("Sell " + self.stocks[i].getName())
