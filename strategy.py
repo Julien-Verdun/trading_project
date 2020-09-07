@@ -17,27 +17,10 @@ class Strategy:
     def run(self):
         result = []
         for stock in self.__stocks:
-            historical_data = stock.getCloseData()
-            pos_var, neg_var = [], []
-
             # Calculation of the RSI
-            # for v in historical_data["Variation"].tolist():
-            for i in range(len(historical_data["Variation"].tolist())):
-                if historical_data.index[i].timestamp() <= time.mktime(time.strptime(self.__date, "%Y-%m-%d")):
-                    if historical_data["Variation"].tolist()[i] > 0:
-                        pos_var.append(
-                            historical_data["Variation"].tolist()[i])
-                        neg_var.append(0)
-                    else:
-                        neg_var.append(
-                            historical_data["Variation"].tolist()[i])
-                        pos_var.append(0)
-                else:
-                    break
-            avg_gain, avg_loss = abs(np.mean(pos_var)), abs(np.mean(neg_var))
-            rsi_step_one = 100 * avg_gain / (avg_gain + avg_loss)
+            rsi_step_one = stock.getRSI(self.__date)
+
             stock_price = stock.getDateValue(self.__date)
-            print(rsi_step_one)
 
             if self.__buy_threshold < rsi_step_one < self.__sell_threshold:
                 result.append(["no go", np.nan])

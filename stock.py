@@ -1,6 +1,6 @@
 import yfinance as yf
 import time
-from configuration import *
+#from configuration import *
 import matplotlib.pyplot as plt
 import numpy as np
 from utils import *
@@ -12,7 +12,7 @@ class Stock:
     with an API
     """
 
-    def __init__(self, name, date, quantity=0):
+    def __init__(self, name, date, simulation_time, quantity=0):
         self.__name = name
         self.__owned = False
         self.__quantity = quantity
@@ -86,6 +86,26 @@ class Stock:
                 break
         return np.mean(mean_var)
 
+    def getRSI(self, date, nb_pts):
+        historical_data = self.__historical_data
+        pos_var, neg_var = [], []
+
+        # Calculation of the RSI
+        for i in range(len(historical_data["Variation"].tolist())):
+            if time.mktime(time.strptime(date, "%Y-%m-%d")) <= historical_data.index[i].timestamp() <= time.mktime(time.strptime(date, "%Y-%m-%d")):
+                if historical_data["Variation"].tolist()[i] > 0:
+                    pos_var.append(
+                        historical_data["Variation"].tolist()[i])
+                    neg_var.append(0)
+                else:
+                    neg_var.append(
+                        historical_data["Variation"].tolist()[i])
+                    pos_var.append(0)
+            else:
+                break
+        avg_gain, avg_loss = abs(np.mean(pos_var)), abs(np.mean(neg_var))
+        return 100 * avg_gain / (avg_gain + avg_loss)
+
     def isDecreasingStock(self, date):
         """
         Returns wheter or not the stock price is decreasing since a least "decrease_window"
@@ -104,6 +124,7 @@ class Stock:
         while self.getDateVariation(increase_date(date, -i)) == None:
             i += 1
         return self.getDateVariation(increase_date(date, i)) > 0
+
 
     def getOwned(self):
         """
@@ -230,13 +251,13 @@ class Stock:
 
 """
 #name = target_companies[0]
-name = "TSLA"
+#name = "TSLA"
 
-stock = Stock(name, simulation_date)
+#stock = Stock(name, simulation_date)
 
-info = stock.getInfo()
-for elt in info:
-    print(elt, "    -   ", info[elt])
+#info = stock.getInfo()
+#for elt in info:
+#    print(elt, "    -   ", info[elt])
 # stock.getHistory()
 
 
