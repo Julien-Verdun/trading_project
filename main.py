@@ -23,7 +23,8 @@ bot = Bot(target_companies, time.strftime("%Y-%m-%d", time.gmtime(t0)))
 # toutes les timestep secondes
 while i < simulation_time:
     t0 += 24 * 3600
-    print("Day : ", time.strftime("%Y-%m-%d", time.gmtime(t0)))
+    if SHOW_LOG:
+        print("Day : ", time.strftime("%Y-%m-%d", time.gmtime(t0)))
     bot.run(time.strftime("%Y-%m-%d", time.gmtime(t0)), selected_strategy)
     time.sleep(timelapse)
     i += 1
