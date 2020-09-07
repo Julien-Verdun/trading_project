@@ -219,15 +219,15 @@ class Stock:
         plt.show()
 
 
-"""
 #name = target_companies[0]
 name = "TSLA"
 
 stock = Stock(name, simulation_date)
 
+info = stock.getInfo()
+for elt in info:
+    print(elt, "    -   ", info[elt])
+# stock.getHistory()
 
-stock.getHistory()
 
-
-stock.plot()
-"""
+# stock.plot()

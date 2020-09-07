@@ -34,3 +34,12 @@ Then, the strategy predicts what to do next with the stock :
 - do nothing if the mean variation is close to 0.
 
 Basically, this strategy buys stocks that are increasing.
+
+## Stock model
+
+### Commission
+
+Les frais de courtage sont des frais de transaction, c'est-à-dire qu'ils sont prélevés pour chaque transaction (pour un achat comme pour une vente) par l'intermédiaire qui exécute cette transaction.
+
+- les frais de courtage proportionnelles peuvent s'élever à 1 % du montant jusqu'à un plafond déterminé, puis baisser à 0,8 % du montant au-delà de ce plafond.
+- les frais de courtage forfaitaires peuvent être de 3 € par transaction, quel que soit le montant de la transaction.
