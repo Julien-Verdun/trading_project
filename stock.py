@@ -3,6 +3,7 @@ import time
 from configuration import *
 import matplotlib.pyplot as plt
 import numpy as np
+from utils import *
 
 
 class Stock:
@@ -90,13 +91,13 @@ class Stock:
                 break
         return np.mean(mean_var)
 
-    def getRSI(self, date):
+    def getRSI(self, date, nb_pts):
         historical_data = self.getCloseData()
         pos_var, neg_var = [], []
 
         # Calculation of the RSI
         for i in range(len(historical_data["Variation"].tolist())):
-            if historical_data.index[i].timestamp() <= time.mktime(time.strptime(date, "%Y-%m-%d")):
+            if time.mktime(time.strptime(date, "%Y-%m-%d")) -  <= historical_data.index[i].timestamp() <= time.mktime(time.strptime(date, "%Y-%m-%d")):
                 if historical_data["Variation"].tolist()[i] > 0:
                     pos_var.append(
                         historical_data["Variation"].tolist()[i])
