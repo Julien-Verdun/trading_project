@@ -2,6 +2,11 @@ import numpy as np
 import time
 from configuration import *
 
+# modifier l'optimisation des quantites pour trouver les meilleurs compromis d'achat
+
+
+# ajouter dans la stratégie, le fait d'attendre tant que ça descend, et si ça remonte on achète pour pouvoir revendre plus chère après
+
 
 class StrategyNaive:
     """
@@ -21,26 +26,19 @@ class StrategyNaive:
         result = []
         for stock in self.__stocks:
 
-            # mean variation
-            # historical_data = stock.getCloseData()
-            # mean_var = 0
-            # for i in range(len(historical_data["Variation"].tolist())):
-            #     if historical_data.index[i].timestamp() <= time.mktime(time.strptime(self.__date, "%Y-%m-%d")):
-            #         if (time.mktime(time.strptime(self.__date, "%Y-%m-%d"))-historical_data.index[i].timestamp()) / (24 * 3600) <= moving_window:
-            #             mean_var += 100 * \
-            #                 historical_data["Variation"].tolist()[i]
-            #     else:
-            #         break
-            # mean_var = np.mean(mean_var)
+            # on vérifie si l'action descend depuis plus de 3 jours decrease_window,
+            # et vient de remonter, si c'est le cas on achète
 
-            mean_var = stock.getMeanVariation(self.__date)
-
-            if lower < mean_var < upper:
-                result.append("no go")
-            elif mean_var >= upper:
+            if stock.isDecreasingStock(self.__date):
                 result.append("buy")
-            elif mean_var < lower:
-                result.append("sell")
+            else:
+                mean_var = stock.getMeanVariation(self.__date)
+                if lower < mean_var < upper:
+                    result.append("no go")
+                elif mean_var >= upper:
+                    result.append("buy")
+                elif mean_var < lower:
+                    result.append("sell")
 
         return self.optimize_quantity(result)
 

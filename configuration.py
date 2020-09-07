@@ -7,9 +7,7 @@ timelapse = 0.1
 simulation_date = "2020-01-01"  # year - month - day
 
 
-selected_strategy = "classic"  # "naive"
-
-# "classic"
+selected_strategy = "naive"  # "classic"
 
 # strategy_naive : valeurs des bornes supérieur et inférieur
 # pour une variation moyenne des gains supérieurs à upper, on achète, pour une
@@ -17,3 +15,8 @@ selected_strategy = "classic"  # "naive"
 lower = -2
 upper = 2
 moving_window = 30
+decrease_window = 3
+
+
+# allows to print some logs
+SHOW_LOG = False
