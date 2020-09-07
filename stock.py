@@ -1,6 +1,6 @@
 import yfinance as yf
 import time
-from configuration import *
+#from configuration import *
 import matplotlib.pyplot as plt
 
 
@@ -10,7 +10,7 @@ class Stock:
     with an API
     """
 
-    def __init__(self, name, date, quantity=0):
+    def __init__(self, name, date, simulation_time, quantity=0):
         self.__name = name
         self.__owned = False
         self.__quantity = quantity
@@ -177,12 +177,12 @@ class Stock:
 
 
 #name = target_companies[0]
-name = "TSLA"
+#name = "TSLA"
 
-stock = Stock(name, simulation_date)
-
-
-stock.getHistory()
+#stock = Stock(name, simulation_date)
 
 
-stock.plot()
+#stock.getHistory()
+
+
+#stock.plot()

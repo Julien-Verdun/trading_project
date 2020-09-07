@@ -2,15 +2,14 @@ from stock import Stock
 from strategy import Strategy
 from strategy_naive import StrategyNaive
 from wallet import Wallet
-from configuration import *
 
 
 class Bot:
 
-    def __init__(self, stocks_id, date):
+    def __init__(self, stocks_id, date, simulation_time):
         self.quantity = 1
         self.stocks_id = stocks_id
-        self.stocks = [Stock(stock_id, quantity=1, date=date)
+        self.stocks = [Stock(name=stock_id, quantity=1, date=date, simulation_time=simulation_time)
                        for stock_id in self.stocks_id]
         self.wallet = Wallet(self.stocks)
         # self.wallet.update(date)
@@ -23,13 +22,13 @@ class Bot:
             print(stock.show(date))
         return
 
-    def run(self, date):
+    def run(self, date, strategy_name, log):
         """
         Run strategy and update wallet 
         """
 
         if self.stocks[0].getDateValue(date):
-            if selected_strategy == "naive":
+            if strategy_name == "naive":
                 strategy = StrategyNaive(self.stocks, date)
             else:
                 strategy = Strategy(self.stocks, date)
@@ -43,19 +42,23 @@ class Bot:
                     self.stocks[i].buy(
                         self.quantity, self.stocks[i].getDateValue(date))
                     self.wallet.buy(i, date)
-                    print("Buy " + self.stocks[i].getName())
+                    if log:
+                        print("Buy " + self.stocks[i].getName())
                 # if the strategie says "sell"
                 elif strat == "sell" and self.stocks[i].getQuantity() > 0:
                     self.stocks[i].sell()
                     self.wallet.sell(i, date)
-                    print("Sell " + self.stocks[i].getName())
+                    if log:
+                        print("Sell " + self.stocks[i].getName())
                 else:
-                    print("No go")
+                    if log:
+                        print("No go")
 
             self.wallet.update(date)
 
             self.last_account = self.wallet.virtual_account
-            print("Date : ", date, "Wallet account : ", self.wallet.virtual_account, ", Stocks amount : ", self.wallet.stocks_amount, ", Available cash : ", self.wallet.available_cash, "\nVariation with previous day : ",
-                  int(10000*(self.wallet.virtual_account-self.wallet.last_account)/self.wallet.virtual_account)/100)
+            if log:
+                print("Date : ", date, "Wallet account : ", self.wallet.virtual_account, ", Stocks amount : ", self.wallet.stocks_amount, ", Available cash : ", self.wallet.available_cash, "\nVariation with previous day : ",
+                    int(10000*(self.wallet.virtual_account-self.wallet.last_account)/self.wallet.virtual_account)/100)
         # else:
         #     print(date, " is not a trading day ! ")
