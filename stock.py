@@ -90,6 +90,26 @@ class Stock:
                 break
         return np.mean(mean_var)
 
+    def getRSI(self, date):
+        historical_data = self.getCloseData()
+        pos_var, neg_var = [], []
+
+        # Calculation of the RSI
+        for i in range(len(historical_data["Variation"].tolist())):
+            if historical_data.index[i].timestamp() <= time.mktime(time.strptime(date, "%Y-%m-%d")):
+                if historical_data["Variation"].tolist()[i] > 0:
+                    pos_var.append(
+                        historical_data["Variation"].tolist()[i])
+                    neg_var.append(0)
+                else:
+                    neg_var.append(
+                        historical_data["Variation"].tolist()[i])
+                    pos_var.append(0)
+            else:
+                break
+        avg_gain, avg_loss = abs(np.mean(pos_var)), abs(np.mean(neg_var))
+        return 100 * avg_gain / (avg_gain + avg_loss)
+
     def getOwned(self):
         """
         Returns a booleen, whether or not the stock is owned
