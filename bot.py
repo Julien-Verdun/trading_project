@@ -33,7 +33,7 @@ class Bot:
                 strategy = StrategyNaive(
                     self.stocks, date, self.wallet.available_cash)
             else:
-                strategy = Strategy(self.stocks, date)
+                strategy = Strategy(self.stocks, date, 1000, 60, 40)
             strats = strategy.run()
 
             self.wallet.save_last_account()
