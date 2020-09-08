@@ -5,23 +5,28 @@ stocks in order to make the maximum of money.
 """
 
 import time
-from bot import Bot
+from src.components.bot import Bot
 import argparse
-from utils import *
+from src.utils.time_utils import *
+from src.utils.json_utils import *
 
 
 DEFAULT_STOCKS = ["MSFT", "ADP", "ATOS", "TSLA", "AAPL", "AIR", "OR"]
 DEFAULT_TIMELAPSE = 1 * 3600
 DEFAULT_SIMULATION_TIME = 40
+# strategy
 DEFAULT_STRATEGY = "naive"
 # naive strategy parameters
 DEFAULT_LOWER = -2
 DEFAULT_UPPER = 2
 DEFAULT_MOVING_WINDOW = 30
-DEFAULT_DECREASE_WINDOW = 30
-# commission
+DEFAULT_DECREASE_WINDOW = 3
+# commission fees
 DEFAULT_FIXED_COMMISSION = 3
 DEFAULT_PROP_COMISSION = 0.02
+# state storage files
+DEFAULT_STOCK_FILE = "./src/stock.JSON"
+DEFAULT_WALLET_FILE = "./src/wallet.JSON"
 
 
 def RunBot():
@@ -39,11 +44,14 @@ def RunBot():
     while True:
         while timestamp_to_date(time.time()) == timestamp_to_date(t0):
             time.sleep(args.timelapse)
-            print(timestamp_to_date(time.time()))
+            print("Waiting for the next day : ",
+                  timestamp_to_date(time.time()))
         if args.log:
             print("Day : ", timestamp_to_date(t0))
         bot.run(timestamp_to_date(t0),
                 args.strategy, args.log)
+        bot.store_state(timestamp_to_date(t0))
+        bot.stock_state(timestamp_to_date(t0))
 
     bot.stock_state(timestamp_to_date(t0))
 
@@ -52,6 +60,7 @@ def RunBot():
     print("Montant initial : ", bot.initial_account)
     print("Montant final : ", bot.last_account)
     print("Total commissions : ", bot.total_commission)
+    print("Total transactions : ", bot.total_transaction)
 
 
 def main():
@@ -79,6 +88,11 @@ def main():
                         default=DEFAULT_FIXED_COMMISSION)
     parser.add_argument("--prop_commission", type=float,
                         default=DEFAULT_PROP_COMISSION)
+
+    parser.add_argument("--stock_file", type=str,
+                        default=DEFAULT_STOCK_FILE)
+    parser.add_argument("--wallet_file", type=str,
+                        default=DEFAULT_WALLET_FILE)
 
     global args
 

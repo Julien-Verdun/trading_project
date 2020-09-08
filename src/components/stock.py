@@ -3,7 +3,7 @@ import time
 #from configuration import *
 import matplotlib.pyplot as plt
 import numpy as np
-from utils import *
+from ..utils.time_utils import *
 
 
 class Stock:

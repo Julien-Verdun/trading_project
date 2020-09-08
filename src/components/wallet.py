@@ -9,6 +9,7 @@ class Wallet:
 
         self.virtual_account = initial_account
         self.total_commission = 0
+        self.total_transaction = 0
         self.last_account = initial_account
         self.stocks = stocks
 
@@ -34,6 +35,7 @@ class Wallet:
             date) * self.stocks[i].getPropCommission() + self.stocks[i].getFixedCommission())
         self.available_cash += self.stocks[i].getQuantity() * (self.stocks[i].getDateValue(
             date) * (1 - self.stocks[i].getPropCommission()) - self.stocks[i].getFixedCommission())
+        self.total_transaction += 1
 
     def buy(self, i, date, quantity=1):
         """
@@ -44,3 +46,4 @@ class Wallet:
             date) * self.stocks[i].getPropCommission() + self.stocks[i].getFixedCommission())
         self.available_cash -= quantity * (self.stocks[i].getDateValue(date) * (
             1 + self.stocks[i].getPropCommission()) + self.stocks[i].getFixedCommission())
+        self.total_transaction += 1
