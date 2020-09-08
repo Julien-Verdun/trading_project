@@ -11,9 +11,8 @@ from utils import *
 
 
 DEFAULT_STOCKS = ["MSFT", "ADP", "ATOS", "TSLA", "AAPL", "AIR", "OR"]
+DEFAULT_TIMELAPSE = 1 * 3600
 DEFAULT_SIMULATION_TIME = 40
-DEFAULT_TIMELAPSE = 0.1
-DEFAULT_SIMULATION_DATE = "2020-01-01"
 DEFAULT_STRATEGY = "naive"
 # naive strategy parameters
 DEFAULT_LOWER = -2
@@ -27,22 +26,24 @@ DEFAULT_PROP_COMISSION = 0.02
 
 def RunBot():
     # time initialisation
-    t0 = date_to_timestamp(args.simulation_date)
-    i = 0
+    t0 = time.time()
 
     # box initialisation
     bot = Bot(args.stocks, timestamp_to_date(t0), args.simulation_time,
               args.fixed_commission, args.prop_commission, args.moving_window, args.decrease_window, args.log)
 
-    # every timestep secondes
-    while i < args.simulation_time:
-        t0 += 24 * 3600
+    bot.run(timestamp_to_date(t0),
+            args.strategy, args.log)
+
+    # every 24 hours
+    while True:
+        while timestamp_to_date(time.time()) == timestamp_to_date(t0):
+            time.sleep(args.timelapse)
+            print(timestamp_to_date(time.time()))
         if args.log:
             print("Day : ", timestamp_to_date(t0))
         bot.run(timestamp_to_date(t0),
                 args.strategy, args.log)
-        time.sleep(args.timelapse)
-        i += 1
 
     bot.stock_state(timestamp_to_date(t0))
 
@@ -59,12 +60,10 @@ def main():
 
     parser.add_argument("--stocks", type=str, nargs="+",
                         default=DEFAULT_STOCKS)
-    parser.add_argument("--simulation_time", type=int,
-                        default=DEFAULT_SIMULATION_TIME)
     parser.add_argument("--timelapse", type=float,
                         default=DEFAULT_TIMELAPSE)
-    parser.add_argument("--simulation_date", type=str,
-                        default=DEFAULT_SIMULATION_DATE)
+    parser.add_argument("--simulation_time", type=int,
+                        default=DEFAULT_SIMULATION_TIME)
     parser.add_argument("--strategy", type=str, default=DEFAULT_STRATEGY)
     # naive strategy parameters
     parser.add_argument("--lower", type=int, default=DEFAULT_LOWER)
