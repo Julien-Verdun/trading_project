@@ -18,8 +18,7 @@ class Strategy:
         result = []
         for stock in self.__stocks:
             # Calculation of the RSI
-            rsi_step_one = stock.getRSI(self.__date)
-
+            rsi_step_one = stock.getRSI(self.__date, 15)
             stock_price = stock.getDateValue(self.__date)
 
             if self.__buy_threshold < rsi_step_one < self.__sell_threshold:
