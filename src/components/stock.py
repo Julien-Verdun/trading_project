@@ -1,9 +1,9 @@
 import yfinance as yf
 import time
-from configuration import *
+#from configuration import *
 import matplotlib.pyplot as plt
 import numpy as np
-from utils import *
+from ..utils.time_utils import *
 
 
 class Stock:
@@ -12,11 +12,19 @@ class Stock:
     with an API
     """
 
-    def __init__(self, name, date, quantity=0):
+    def __init__(self, name, date, simulation_time, fixed_commission, prop_commission, moving_window, decrease_window, quantity=0):
         self.__name = name
         self.__owned = False
         self.__quantity = quantity
         self.__cost_price = 0
+        # in euros
+        self.__fixed_commission = fixed_commission
+        # rate, proportionnal to stock price
+        self.__prop_commission = prop_commission
+        # parameters
+        self.__decrease_window = decrease_window
+        self.__moving_window = moving_window
+
         self.__stock = yf.Ticker(name)
         # print(increase_date(date, -(moving_window + decrease_window)))
 
@@ -76,7 +84,7 @@ class Stock:
         mean_var = 0
         for i in range(len(self.__historical_data["Variation"].tolist())):
             if self.__historical_data.index[i].timestamp() <= time.mktime(time.strptime(date, "%Y-%m-%d")):
-                if (time.mktime(time.strptime(date, "%Y-%m-%d"))-self.__historical_data.index[i].timestamp()) / (24 * 3600) <= moving_window:
+                if (time.mktime(time.strptime(date, "%Y-%m-%d"))-self.__historical_data.index[i].timestamp()) / (24 * 3600) <= self.__moving_window:
                     mean_var += 100 * \
                         self.__historical_data["Variation"].tolist()[i]
             else:
@@ -106,7 +114,7 @@ class Stock:
         """
         i = 0
         j = 0
-        while i <= decrease_window:
+        while i <= self.__decrease_window:
             if self.getDateVariation(increase_date(date, -i-j-1)) != None:
                 if self.getDateVariation(increase_date(date, -i-j-1)) > 0:
                     return False
@@ -117,7 +125,6 @@ class Stock:
         while self.getDateVariation(increase_date(date, -i)) == None:
             i += 1
         return self.getDateVariation(increase_date(date, i)) > 0
-
 
     def getOwned(self):
         """
@@ -154,6 +161,12 @@ class Stock:
         Sets the stock cost price
         """
         self.__cost_price = cost_price
+
+    def getFixedCommission(self):
+        return self.__fixed_commission
+
+    def getPropCommission(self):
+        return self.__prop_commission
 
     def getName(self):
         """
@@ -242,17 +255,3 @@ class Stock:
         plt.ylabel("Price ($) ")
         plt.show()
 
-'''
-#name = target_companies[0]
-name = "TSLA"
-
-stock = Stock(name, simulation_date)
-
-info = stock.getInfo()
-for elt in info:
-    print(elt, "    -   ", info[elt])
-# stock.getHistory()
-
-
-# stock.plot()
-'''

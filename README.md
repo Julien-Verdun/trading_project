@@ -8,11 +8,16 @@ Creation of a trading bot.
 - Maxime Peter
 - Julien Verdun
 
+#
+
 ## Stocks API
 
 For this project we use **yfinance** API of Python.
 
 In a command prompt, run the command :
+
+########################## Mettre ici
+les choses a mettre dans la ligne de commande ##############
 
 ```
 python main.py [strategy]
@@ -22,6 +27,18 @@ with strategy the strategy name :
 
 - classic
 - naive
+
+#
+
+## Bot operation
+
+The bot is working as follow :
+
+- every day, the bot calls the strategy (different strategies implemented, see the description below)
+- the strategy observes the stock market for a short period of time and decides whether or not the bot should buy, sell, or do nothing with every stocks
+- the bot uses the strategy predictions to buy and sell stocks
+- the wallet is updated for every bot actions, the available cash and stock amount are updated by taking into account the commission fees
+- at the end, it is possible to see how much money did the bt win or lose at the stock market, hoping that it wins more money than it loses.
 
 ### Naive strategy
 
@@ -35,11 +52,13 @@ Then, the strategy predicts what to do next with the stock :
 
 Basically, this strategy buys stocks that are increasing.
 
-## Stock model
+### The commission fees
 
-### Commission
+When one buys a stock or sells it, it exists many costs, fees, brokerage fee and commissions, debited by the bank and the stock market.
 
-Les frais de courtage sont des frais de transaction, c'est-à-dire qu'ils sont prélevés pour chaque transaction (pour un achat comme pour une vente) par l'intermédiaire qui exécute cette transaction.
+In a first time, we decided to model all those fees, simply with 2 components :
 
-- les frais de courtage proportionnelles peuvent s'élever à 1 % du montant jusqu'à un plafond déterminé, puis baisser à 0,8 % du montant au-delà de ce plafond.
-- les frais de courtage forfaitaires peuvent être de 3 € par transaction, quel que soit le montant de la transaction.
+- a fixed commission sets to 3€
+- a proportionnal commission sets to 2% of the stock value
+
+and those fees are debited every single time a stock is bought or sold. The choosen values are overestimated to make sure in a real simulation we won't lose money.
