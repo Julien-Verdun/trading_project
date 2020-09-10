@@ -105,7 +105,8 @@ def main():
     print("Better coefficient : ",
           table_test[index_max][0]/step, table_test[index_max][1]/step, table_test[index_max][2])
 
-    text_table_test = ""
+    text_table_test = "lower*" + str(step) + " upper*" + str(
+        step) + " last_account total_commission total_transaction"
     for line in table_test.tolist():
         text_table_test += " ".join([str(elt) for elt in line])
         text_table_test += "\n"
