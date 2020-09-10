@@ -14,7 +14,7 @@ class Stock:
 
     def __init__(self, name, date, simulation_time, fixed_commission, prop_commission, moving_window, decrease_window, quantity=0):
         self.__name = name
-        self.__owned = False
+        self.__owned = True 
         self.__quantity = quantity
         self.__cost_price = 0
         # in euros
@@ -242,13 +242,14 @@ class Stock:
             return None
         # sell all the stocks
         elif quantity == self.getQuantity():
+            print("good quantity")
             self.setOwned(False)
             self.setQuantity(0)
             self.setCostPrice(0)
         # stell part of the stocks
         else:
             self.setQuantity(self.getQuantity()-quantity)
-        return
+        return "sold"
 
     def plot(self):
         """

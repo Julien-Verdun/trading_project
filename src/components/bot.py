@@ -64,24 +64,22 @@ class Bot:
             for i, strat in enumerate(strats):
                 # if the strategie says "buy" and the amount is available
                 if strat[0] == "buy" and strat[1] > 0 and self.wallet.buying_autorisation(i, strat[1], date):
-                    if log:
-                        print(
-                            "Buy " + str(strat[1]) + " stock(s) of " + self.stocks[i].getName())
-                    self.wallet.buy(i, date, strat[1])
-                    self.stocks[i].buy(
-                        self.quantity, self.stocks[i].getDateValue(date))
-                    self.wallet.buy(i, date)
-                    if log:
-                        print("Buy " + self.stocks[i].getName())
+                    if log: 
+                        print("Buy " + str(strat[1]) + " stock(s) of " + self.stocks[i].getName())
+                    self.wallet.buy(i, date, int(strat[1]))
+                    self.stocks[i].buy(int(strat[1]), self.stocks[i].getDateValue(date))
+                    
+
                 # if the strategie says "sell"
-                elif strat[0] == "sell" and self.stocks[i].getQuantity() > 0:
-                    if log:
-                        print(
-                            "Sell " + str(self.stocks[i].getQuantity()) + " stock(s) of " + self.stocks[i].getName())
-                    self.stocks[i].sell(strat[1])
-                    self.wallet.sell(i, date)
-                    if log:
-                        print("Sell " + self.stocks[i].getName())
+                elif strat[0] == "sell" and self.stocks[i].getQuantity() > 0 and strat[1] > 0:
+                    
+                    sell = self.stocks[i].sell(int(strat[1]))
+                    if sell is not None:
+                        self.wallet.sell(i, date)
+                        if log:
+                            print("Sell " + str(self.stocks[i].getQuantity()) + " stock(s) of " + self.stocks[i].getName())
+
+                        
                 else:
                     if log:
                         print("No go")
