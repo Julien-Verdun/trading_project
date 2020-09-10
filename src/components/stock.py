@@ -93,7 +93,6 @@ class Stock:
 
     def getRSI(self, date, nb_days):
         historical_data = self.getHistoryToDate(date, nb_days)
-        print(historical_data)
         pos_var, neg_var = [], []
         # Calculation of the RSI
         for i in range(len(historical_data["Variation"].tolist())):
