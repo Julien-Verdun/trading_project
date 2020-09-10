@@ -91,25 +91,29 @@ class Stock:
                 break
         return np.mean(mean_var)
 
-    def getRSI(self, date, nb_pts):
-        historical_data = self.__historical_data
+    def getRSI(self, date, nb_days):
+        historical_data = self.getHistoryToDate(date, nb_days)
         pos_var, neg_var = [], []
-
         # Calculation of the RSI
         for i in range(len(historical_data["Variation"].tolist())):
-            if time.mktime(time.strptime(date, "%Y-%m-%d")) <= historical_data.index[i].timestamp() <= time.mktime(time.strptime(date, "%Y-%m-%d")):
-                if historical_data["Variation"].tolist()[i] > 0:
-                    pos_var.append(
-                        historical_data["Variation"].tolist()[i])
-                    neg_var.append(0)
-                else:
-                    neg_var.append(
-                        historical_data["Variation"].tolist()[i])
-                    pos_var.append(0)
+            if historical_data["Variation"].tolist()[i] > 0:
+                pos_var.append(
+                    historical_data["Variation"].tolist()[i])
+                neg_var.append(0)
             else:
-                break
+                neg_var.append(historical_data["Variation"].tolist()[i])
+                pos_var.append(0)
         avg_gain, avg_loss = abs(np.mean(pos_var)), abs(np.mean(neg_var))
         return 100 * avg_gain / (avg_gain + avg_loss)
+
+
+    def getStoch(self, date, nb_days):
+        historical_data = self.getHistoryToDate(date, nb_days)
+        close_values = historical_data["Variation"].tolist()
+        last_close = close_values[-1]
+        return 100 * ((last_close - min(close_values)) / (max(close_values) - min(close_values)))
+
+
 
     def isDecreasingStock(self, date):
         """
@@ -195,6 +199,13 @@ class Stock:
         history['Variation'] = history['Variation'].astype(int)/10000
         return history[['Close', 'Variation']]
 
+    def getHistoryToDate(self, date, nb_days):
+        """
+        Returns the nb_days last lines for a given date. For example, if I need the 5 last days to calculate smth
+        getHistoryToDate(now, 5) will extract the 5 last entry
+        """
+        return self.__historical_data.loc[increase_date(date, - nb_days):date]
+
     def getSupport(self):
         return
 
@@ -252,18 +263,3 @@ class Stock:
         plt.ylabel("Price ($) ")
         plt.show()
 
-
-"""
-#name = target_companies[0]
-#name = "TSLA"
-
-#stock = Stock(name, simulation_date)
-
-#info = stock.getInfo()
-#for elt in info:
-#    print(elt, "    -   ", info[elt])
-# stock.getHistory()
-
-
-# stock.plot()
-"""

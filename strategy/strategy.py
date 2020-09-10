@@ -18,24 +18,27 @@ class Strategy:
         result = []
         for stock in self.__stocks:
             # Calculation of the RSI
-            rsi_step_one = stock.getRSI(self.__date)
-
+            rsi = stock.getRSI(self.__date, 14)
             stock_price = stock.getDateValue(self.__date)
+            normalized_rsi = rsi / 100
+            stoch = stock.getStoch(self.__date, 14)
+            normalized_stoch = stoch / 100
+            score = np.mean([normalized_stoch, normalized_rsi])
 
-            if self.__buy_threshold < rsi_step_one < self.__sell_threshold:
+            if self.__buy_threshold < score < self.__sell_threshold:
                 result.append(["no go", np.nan])
-            elif rsi_step_one < self.__buy_threshold:
-                factor = (self.__buy_threshold - rsi_step_one) / 10
+            elif score < self.__buy_threshold:
+                factor = (self.__buy_threshold - rsi) * 10
                 amount = factor * self.__unit_price
-                nb_stocks = amount // stock_price
+                nb_stocks = int(amount // stock_price)
                 if amount >= stock_price:
                     result.append(["buy", nb_stocks])
                 else:
                     result.append(["no go", np.nan])
             else:
-                factor = (rsi_step_one - self.__sell_threshold) / 10
+                factor = (rsi - self.__sell_threshold) * 10
                 amount = factor * self.__unit_price
-                nb_stocks = amount // stock_price
+                nb_stocks = int(amount // stock_price)
                 if amount >= stock_price:
                     result.append(["sell", nb_stocks])
                 else:
