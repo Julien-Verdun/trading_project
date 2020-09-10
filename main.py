@@ -25,7 +25,7 @@ DEFAULT_DECREASE_WINDOW = 3
 DEFAULT_FIXED_COMMISSION = 3
 DEFAULT_PROP_COMISSION = 0.02
 # inital account amont
-DEFAULT_INITIAL_ACCOUNT = 10000
+DEFAULT_INITIAL_ACCOUNT = 3000
 
 
 def RunBot():
@@ -35,7 +35,7 @@ def RunBot():
     print("Hi")
     # box initialisation
     bot = Bot(args.stocks, timestamp_to_date(t0), args.simulation_time,
-              args.fixed_commission, args.prop_commission, args.moving_window, args.decrease_window, args.log, args.initial_account)
+              args.fixed_commission, args.prop_commission, args.moving_window, args.decrease_window, args.log, args.initial_account, args.lower, args.upper)
 
     # every timestep secondes
     while i < args.simulation_time:

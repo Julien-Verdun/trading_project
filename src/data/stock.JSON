@@ -20,8 +20,8 @@
   "storage_date": "2020-02-09"
  },
  "AAPL": {
-  "quantity": 8,
-  "cost_price": 78.47625,
+  "quantity": 11,
+  "cost_price": 77.79363636363637,
   "storage_date": "2020-02-09"
  },
  "AIR": {
@@ -30,8 +30,8 @@
   "storage_date": "2020-02-09"
  },
  "OR": {
-  "quantity": 3,
-  "cost_price": 9.516666666666667,
+  "quantity": 1,
+  "cost_price": 9.18,
   "storage_date": "2020-02-09"
  }
 }

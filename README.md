@@ -52,6 +52,8 @@ Then, the strategy predicts what to do next with the stock :
 
 Basically, this strategy buys stocks that are increasing.
 
+The **lower** and **upper** boundaries are optimised by testing the different possibilities and choosing the combination with the better result (maximal final money amount).
+
 ### The commission fees
 
 When one buys a stock or sells it, it exists many costs, fees, brokerage fee and commissions, debited by the bank and the stock market.
@@ -62,3 +64,10 @@ In a first time, we decided to model all those fees, simply with 2 components :
 - a proportionnal commission sets to 2% of the stock value
 
 and those fees are debited every single time a stock is bought or sold. The choosen values are overestimated to make sure in a real simulation we won't lose money.
+
+## Simulation VS Production
+
+We decided to implement first a bot able to simulate several days or months of the stocks market very quickly. The limiting factor in our project is the API time request. In fact, our strategies compute the prediction very quickly, but to get the result from a request to the API, it almost takes few seconds.
+To simulate quickly the result of our strategies on a year of stock market's data, we decided to get the data from the API only once, at the initilisation of the class.
+
+(expliquer la suite avec la prod)
