@@ -56,7 +56,7 @@ class Bot:
                 strategy = StrategyNaive(
                     self.stocks, date, self.initial_account)
             else:
-                strategy = Strategy(self.stocks, date, 1000, 60, 40)
+                strategy = Strategy(self.stocks, date, 1000, 0.7, 0.3)
             strats = strategy.run()
 
             self.wallet.save_last_account()
@@ -78,6 +78,7 @@ class Bot:
                     if log:
                         print(
                             "Sell " + str(self.stocks[i].getQuantity()) + " stock(s) of " + self.stocks[i].getName())
+                    self.stocks[i].sell(strat[1])
                     self.wallet.sell(i, date)
                     if log:
                         print("Sell " + self.stocks[i].getName())

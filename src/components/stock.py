@@ -106,6 +106,15 @@ class Stock:
         avg_gain, avg_loss = abs(np.mean(pos_var)), abs(np.mean(neg_var))
         return 100 * avg_gain / (avg_gain + avg_loss)
 
+
+    def getStoch(self, date, nb_days):
+        historical_data = self.getHistoryToDate(date, nb_days)
+        close_values = historical_data["Variation"].tolist()
+        last_close = close_values[-1]
+        return 100 * ((last_close - min(close_values)) / (max(close_values) - min(close_values)))
+
+
+
     def isDecreasingStock(self, date):
         """
         Returns wheter or not the stock price is decreasing since a least "decrease_window"
