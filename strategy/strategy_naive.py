@@ -1,6 +1,5 @@
 import numpy as np
 import time
-from configuration import *
 
 # modifier l'optimisation des quantites pour trouver les meilleurs compromis d'achat
 
@@ -17,10 +16,12 @@ class StrategyNaive:
     if it is lower than a defined threshold, the bot sells the stock, otherwise, it does nothing.
     """
 
-    def __init__(self, stocks, date, available_cash):
+    def __init__(self, stocks, date, available_cash, lower, upper):
         self.__stocks = stocks
         self.__date = date
         self.__available_cash = available_cash
+        self.__lower = lower
+        self.__upper = upper
 
     def run(self):
         result = []
@@ -33,12 +34,14 @@ class StrategyNaive:
                 result.append("buy")
             else:
                 mean_var = stock.getMeanVariation(self.__date)
-                if lower < mean_var < upper:
+                if self.__lower < mean_var < self.__upper:
                     result.append("no go")
-                elif mean_var >= upper:
+                elif mean_var >= self.__upper:
                     result.append("buy")
-                elif mean_var < lower:
+                elif mean_var < self.__lower:
                     result.append("sell")
+                else:
+                    print("PROBLEMOS")
 
         return self.optimize_quantity(result)
 

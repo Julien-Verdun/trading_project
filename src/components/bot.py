@@ -8,7 +8,7 @@ from ..utils.json_utils import *
 
 class Bot:
 
-    def __init__(self, stocks_id, date, simulation_time, fixed_commission, prop_commission, moving_window, decrease_window, log, initial_account):
+    def __init__(self, stocks_id, date, simulation_time, fixed_commission, prop_commission, moving_window, decrease_window, log, initial_account, lower, upper):
         self.quantity = 1
         self.stocks_id = stocks_id
         self.stocks = [Stock(name=stock_id, quantity=1, date=date, simulation_time=simulation_time, fixed_commission=fixed_commission, prop_commission=prop_commission, moving_window=moving_window, decrease_window=decrease_window)
@@ -18,6 +18,8 @@ class Bot:
         self.last_account = initial_account
         self.total_commission = 0
         self.total_transaction = 0
+        self.lower = lower
+        self.upper = upper
 
     def stock_state(self, date):
         for stock in self.stocks:
@@ -54,7 +56,7 @@ class Bot:
         if self.stocks[0].getDateValue(date):
             if strategy_name == "naive":
                 strategy = StrategyNaive(
-                    self.stocks, date, self.initial_account)
+                    self.stocks, date, self.initial_account, self.lower, self.upper)
             else:
                 strategy = Strategy(self.stocks, date, 1000, 60, 40)
             strats = strategy.run()
