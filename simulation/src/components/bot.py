@@ -28,6 +28,26 @@ class Bot:
         print("Stocks amount", self.wallet.stocks_amount)
         return
 
+    def store_state(self, date):
+        write_json("./src/data/wallet.JSON", {
+            "virtual_account": self.wallet.virtual_account,
+            "available_cash": self.wallet.available_cash,
+            "stocks_amount": self.wallet.stocks_amount,
+            "last_account": self.wallet.last_account,
+            "total_commission": self.wallet.total_commission,
+            "total_transaction": self.wallet.total_transaction,
+            "storage_date": date
+        })
+        stock_content = {}
+        for stock in self.stocks:
+            stock_content[stock.getName()] = {
+                "quantity": stock.getQuantity(),
+                "cost_price": stock.getCostPrice(),
+                "storage_date": date
+            }
+
+        write_json("./src/data/stock.JSON", stock_content)
+
     def run(self, date, strategy_name, log):
         """
         Run strategy and update wallet 
@@ -49,21 +69,20 @@ class Bot:
                     if log:
                         print(
                             "Buy " + str(strat[1]) + " stock(s) of " + self.stocks[i].getName())
-                    self.wallet.buy(i, date, strat[1])
+                    self.wallet.buy(i, date, int(strat[1]))
                     self.stocks[i].buy(
-                        self.quantity, self.stocks[i].getDateValue(date))
-                    self.wallet.buy(i, date)
-                    if log:
-                        print("Buy " + self.stocks[i].getName())
+                        int(strat[1]), self.stocks[i].getDateValue(date))
+
                 # if the strategie says "sell"
-                elif strat[0] == "sell" and self.stocks[i].getQuantity() > 0:
-                    if log:
-                        print(
-                            "Sell " + str(self.stocks[i].getQuantity()) + " stock(s) of " + self.stocks[i].getName())
-                    self.stocks[i].sell(strat[1])
-                    self.wallet.sell(i, date)
-                    if log:
-                        print("Sell " + self.stocks[i].getName())
+                elif strat[0] == "sell" and self.stocks[i].getQuantity() > 0 and strat[1] > 0:
+
+                    sell = self.stocks[i].sell(int(strat[1]))
+                    if sell is not None:
+                        self.wallet.sell(i, date)
+                        if log:
+                            print(
+                                "Sell " + str(self.stocks[i].getQuantity()) + " stock(s) of " + self.stocks[i].getName())
+
                 else:
                     if log:
                         print("No go")
