@@ -3,7 +3,6 @@ from strategy.strategy import Strategy
 from strategy.strategy_naive import StrategyNaive
 from .wallet import Wallet
 from ..utils.time_utils import *
-from ..utils.json_utils import *
 
 
 class Bot:
@@ -27,26 +26,6 @@ class Bot:
         print("Available cash", self.wallet.available_cash)
         print("Stocks amount", self.wallet.stocks_amount)
         return
-
-    def store_state(self, date):
-        write_json("./src/data/wallet.JSON", {
-            "virtual_account": self.wallet.virtual_account,
-            "available_cash": self.wallet.available_cash,
-            "stocks_amount": self.wallet.stocks_amount,
-            "last_account": self.wallet.last_account,
-            "total_commission": self.wallet.total_commission,
-            "total_transaction": self.wallet.total_transaction,
-            "storage_date": date
-        })
-        stock_content = {}
-        for stock in self.stocks:
-            stock_content[stock.getName()] = {
-                "quantity": stock.getQuantity(),
-                "cost_price": stock.getCostPrice(),
-                "storage_date": date
-            }
-
-        write_json("./src/data/stock.JSON", stock_content)
 
     def run(self, date, strategy_name, log):
         """
