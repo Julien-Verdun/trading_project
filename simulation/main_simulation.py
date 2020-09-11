@@ -9,6 +9,7 @@ from src.components.bot import Bot
 import argparse
 from src.utils.time_utils import *
 from src.utils.json_utils import *
+import sys
 
 
 DEFAULT_STOCKS = ["MSFT", "ADP", "ATOS", "TSLA", "AAPL", "AIR", "OR"]
@@ -44,11 +45,8 @@ def RunBot():
             print("Day : ", timestamp_to_date(t0))
         bot.run(timestamp_to_date(t0),
                 args.strategy, args.log)
-        bot.store_state(timestamp_to_date(t0))
         time.sleep(args.timelapse)
         i += 1
-
-    bot.stock_state(timestamp_to_date(t0))
 
     # if args.log:
     print("Bilan de la simulation : ")
