@@ -238,7 +238,6 @@ class Stock:
             return None
         # sell all the stocks
         elif quantity == self.getQuantity():
-            print("good quantity")
             self.setOwned(False)
             self.setQuantity(0)
             self.setCostPrice(0)

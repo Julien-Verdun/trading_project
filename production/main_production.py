@@ -25,8 +25,9 @@ DEFAULT_DECREASE_WINDOW = 3
 DEFAULT_FIXED_COMMISSION = 3
 DEFAULT_PROP_COMISSION = 0.02
 # state storage files
-DEFAULT_STOCK_FILE = "./src/stock.JSON"
-DEFAULT_WALLET_FILE = "./src/wallet.JSON"
+DEFAULT_BOT_FILE = "./src/data/bot.JSON"
+DEFAULT_STOCK_FILE = "./src/data/stock.JSON"
+DEFAULT_WALLET_FILE = "./src/data/wallet.JSON"
 # inital account amont
 DEFAULT_INITIAL_ACCOUNT = 3000
 
@@ -38,9 +39,14 @@ def RunBot():
     Initialisation du bot avec un JSON ?
     lui donner en argument les fichier stock et wallet pour les initialiser la ou on les a laissé
     """
+
+    # load file and pass data to bot
+
     # box initialisation
     bot = Bot(args.stocks, timestamp_to_date(t0), args.simulation_time,
-              args.fixed_commission, args.prop_commission, args.moving_window, args.decrease_window, args.log, args.initial_account, args.lower, args.upper)
+              args.fixed_commission, args.prop_commission, args.moving_window,
+              args.decrease_window, args.log, args.initial_account, args.lower, args.upper,
+              args.stock_file, args.wallet_file, args.bot_file)
 
     bot.run(timestamp_to_date(t0),
             args.strategy, args.log)
@@ -94,6 +100,8 @@ def main():
     parser.add_argument("--prop_commission", type=float,
                         default=DEFAULT_PROP_COMISSION)
 
+    parser.add_argument("--bot_file", type=str,
+                        default=DEFAULT_BOT_FILE)
     parser.add_argument("--stock_file", type=str,
                         default=DEFAULT_STOCK_FILE)
     parser.add_argument("--wallet_file", type=str,

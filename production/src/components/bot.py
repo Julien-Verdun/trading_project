@@ -8,7 +8,9 @@ from ..utils.json_utils import *
 
 class Bot:
 
-    def __init__(self, stocks_id, date, simulation_time, fixed_commission, prop_commission, moving_window, decrease_window, log, initial_account, lower, upper):
+    def __init__(self, stocks_id, date, simulation_time, fixed_commission,
+                 prop_commission, moving_window, decrease_window, log, initial_account,
+                 lower, upper, stock_file, wallet_file, bot_file):
         self.quantity = 1
         self.stocks_id = stocks_id
         self.stocks = [Stock(name=stock_id, quantity=1, date=date, simulation_time=simulation_time, fixed_commission=fixed_commission, prop_commission=prop_commission, moving_window=moving_window, decrease_window=decrease_window)
@@ -16,10 +18,13 @@ class Bot:
         self.wallet = Wallet(self.stocks, initial_account)
         self.initial_account = initial_account
         self.last_account = initial_account
-        self.total_commission = 0
-        self.total_transaction = 0
+        self.total_commission = self.wallet.total_commission
+        self.total_transaction = self.wallet.total_transaction
         self.lower = lower
         self.upper = upper
+        self.stock_file = stock_file
+        self.wallet_file = wallet_file
+        self.bot_file = bot_file
 
     def stock_state(self, date):
         for stock in self.stocks:
@@ -28,8 +33,14 @@ class Bot:
         print("Stocks amount", self.wallet.stocks_amount)
         return
 
+    def load_state(self, date):
+        """
+        recuperer les données nécessaires à faire repartir le bot dans son état de base et relancer la production
+        """
+        bot = read_json(self.bot_file)
+
     def store_state(self, date):
-        write_json("./src/data/wallet.JSON", {
+        write_json(self.wallet_file, {
             "virtual_account": self.wallet.virtual_account,
             "available_cash": self.wallet.available_cash,
             "stocks_amount": self.wallet.stocks_amount,
@@ -38,6 +49,7 @@ class Bot:
             "total_transaction": self.wallet.total_transaction,
             "storage_date": date
         })
+
         stock_content = {}
         for stock in self.stocks:
             stock_content[stock.getName()] = {
@@ -46,7 +58,13 @@ class Bot:
                 "storage_date": date
             }
 
-        write_json("./src/data/stock.JSON", stock_content)
+        write_json(self.stock_file, stock_content)
+
+        bot_content = {
+
+        }
+
+        write_json(self.bot_file, bot_content)
 
     def run(self, date, strategy_name, log):
         """
@@ -66,22 +84,23 @@ class Bot:
             for i, strat in enumerate(strats):
                 # if the strategie says "buy" and the amount is available
                 if strat[0] == "buy" and strat[1] > 0 and self.wallet.buying_autorisation(i, strat[1], date):
-                    if log: 
-                        print("Buy " + str(strat[1]) + " stock(s) of " + self.stocks[i].getName())
+                    if log:
+                        print(
+                            "Buy " + str(strat[1]) + " stock(s) of " + self.stocks[i].getName())
                     self.wallet.buy(i, date, int(strat[1]))
-                    self.stocks[i].buy(int(strat[1]), self.stocks[i].getDateValue(date))
-                    
+                    self.stocks[i].buy(
+                        int(strat[1]), self.stocks[i].getDateValue(date))
 
                 # if the strategie says "sell"
                 elif strat[0] == "sell" and self.stocks[i].getQuantity() > 0 and strat[1] > 0:
-                    
+
                     sell = self.stocks[i].sell(int(strat[1]))
                     if sell is not None:
                         self.wallet.sell(i, date)
                         if log:
-                            print("Sell " + str(self.stocks[i].getQuantity()) + " stock(s) of " + self.stocks[i].getName())
+                            print(
+                                "Sell " + str(self.stocks[i].getQuantity()) + " stock(s) of " + self.stocks[i].getName())
 
-                        
                 else:
                     if log:
                         print("No go")
