@@ -83,7 +83,8 @@ class Bot:
                 if strat[0] == "buy" and strat[1] > 0 and self.wallet.buying_autorisation(i, strat[1], date):
                     if log:
                         print(
-                            "Buy " + str(strat[1]) + " stock(s) of " + self.stocks[i].getName())
+                            "Buy " + str(strat[1]) + " stock(s) of " + self.stocks[i].getName()
+                            + " : " + str(strat[1] * self.stocks[i].getDateValue(date)) + " euros")
                     self.wallet.buy(i, date, int(strat[1]))
                     self.stocks[i].buy(
                         int(strat[1]), self.stocks[i].getDateValue(date))
@@ -95,8 +96,8 @@ class Bot:
                     if sell is not None:
                         self.wallet.sell(i, date)
                         if log:
-                            print(
-                                "Sell " + str(self.stocks[i].getQuantity()) + " stock(s) of " + self.stocks[i].getName())
+                            print("Sell " + str(strat[1]) + " stock(s) of " + self.stocks[i].getName()
+                                  + " : " + str(strat[1] * self.stocks[i].getDateValue(date)) + " euros")
 
                 else:
                     if log:

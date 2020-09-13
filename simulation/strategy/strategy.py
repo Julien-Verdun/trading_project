@@ -7,12 +7,13 @@ class Strategy:
     This class will define the buy and sell strategy
     """
 
-    def __init__(self, stocks, date, unit_price, sell_threshold, buy_threshold):
+    def __init__(self, stocks, date, unit_price, sell_threshold, buy_threshold, available_cash):
         self.__stocks = stocks
         self.__date = date
         self.__unit_price = unit_price
         self.__sell_threshold = sell_threshold
         self.__buy_threshold = buy_threshold
+        self.__available_cash = available_cash
 
     def run(self):
         result = []
@@ -27,20 +28,21 @@ class Strategy:
 
             if self.__buy_threshold < score < self.__sell_threshold:
                 result.append(["no go", np.nan])
-            elif score < self.__buy_threshold:
-                factor = (self.__buy_threshold - rsi) * 10
-                amount = factor * self.__unit_price
-                nb_stocks = int(amount // stock_price)
-                if amount >= stock_price:
-                    result.append(["buy", nb_stocks])
-                else:
-                    result.append(["no go", np.nan])
-            else:
-                factor = (rsi - self.__sell_threshold) * 10
+            elif score > self.__sell_threshold:
+                factor = (score - self.__sell_threshold) * 10
                 amount = factor * self.__unit_price
                 nb_stocks = int(amount // stock_price)
                 if amount >= stock_price:
                     result.append(["sell", nb_stocks])
+                    self.__available_cash += stock.getQuantity() * stock.getDateValue(self.__date)
                 else:
                     result.append(["no go", nb_stocks])
+            else:
+                factor = (self.__buy_threshold - score) * 10
+                amount = factor * self.__unit_price
+                nb_stocks = int(amount // stock_price)
+                if stock_price <= amount <= self.__available_cash:
+                    result.append(["buy", nb_stocks])
+                else:
+                    result.append(["no go", np.nan])
         return result
