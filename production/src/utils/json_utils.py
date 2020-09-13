@@ -21,3 +21,11 @@ def write_json(file_name, content):
     with open(file_name, 'w') as outfile:
         json.dump(content, outfile, indent=True)
     return
+
+
+def print_json(content):
+    """
+    Print the json content
+    """
+    for key in content.keys():
+        print(key, " : ", content[key])

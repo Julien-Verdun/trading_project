@@ -11,9 +11,10 @@ class Stock:
     with an API
     """
 
-    def __init__(self, name, date, simulation_time, fixed_commission, prop_commission, moving_window, decrease_window, quantity=0):
+    def __init__(self, name, date, fixed_commission,
+                 prop_commission, moving_window, decrease_window, quantity=0):
         self.__name = name
-        self.__owned = True 
+        self.__owned = True
         self.__quantity = quantity
         self.__cost_price = 0
         # in euros
@@ -29,9 +30,14 @@ class Stock:
 
         self.__history = self.__stock.history(
             start=increase_date(date, -(moving_window + decrease_window)),
-            end=increase_date(date, simulation_time+2)
+            end=increase_date(date, -1)
         )
         self.__historical_data = self.getCloseData()
+        return
+
+    def initdata(self, stock):
+        self.__quantity = stock["quantity"]
+        self.__cost_price = stock["cost_price"]
         return
 
     def show(self, date):

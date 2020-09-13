@@ -13,6 +13,7 @@ import sys
 
 
 DEFAULT_STOCKS = ["MSFT", "ADP", "ATOS", "TSLA", "AAPL", "AIR", "OR"]
+DEFAULT_INITIAL_QUANTITY = 1
 DEFAULT_SIMULATION_TIME = 40
 DEFAULT_TIMELAPSE = 0.1
 DEFAULT_SIMULATION_DATE = "2020-01-01"
@@ -35,7 +36,7 @@ def RunBot():
     i = 0
     print("Hi")
     # box initialisation
-    bot = Bot(args.stocks, timestamp_to_date(t0), args.simulation_time,
+    bot = Bot(args.stocks, timestamp_to_date(t0), args.initial_quantity, args.simulation_time,
               args.fixed_commission, args.prop_commission, args.moving_window, args.decrease_window, args.log, args.initial_account, args.lower, args.upper)
 
     # every timestep secondes
@@ -46,7 +47,10 @@ def RunBot():
         bot.run(timestamp_to_date(t0),
                 args.strategy, args.log)
         time.sleep(args.timelapse)
+        # bot.store_state(timestamp_to_date(t0))
         i += 1
+
+    bot.stock_state(timestamp_to_date(t0))
 
     # if args.log:
     print("Bilan de la simulation : ")
@@ -62,6 +66,8 @@ def main():
 
     parser.add_argument("--stocks", type=str, nargs="+",
                         default=DEFAULT_STOCKS)
+    parser.add_argument("--initial_quantity", type=int,
+                        default=DEFAULT_INITIAL_QUANTITY)
     parser.add_argument("--simulation_time", type=int,
                         default=DEFAULT_SIMULATION_TIME)
     parser.add_argument("--timelapse", type=float,

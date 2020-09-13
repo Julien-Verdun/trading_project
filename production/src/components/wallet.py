@@ -13,6 +13,15 @@ class Wallet:
         self.last_account = initial_account
         self.stocks = stocks
 
+    def initdata(self, wallet):
+        self.virtual_account = wallet["virtual_account"]
+        self.available_cash = wallet["available_cash"]
+        self.stocks_amount = wallet["stocks_amount"]
+        self.last_account = wallet["last_account"]
+        self.total_commission = wallet["total_commission"]
+        self.total_transaction = wallet["total_transaction"]
+        return
+
     def update(self, date):
         self.stocks_amount = 0
         for stock in self.stocks:

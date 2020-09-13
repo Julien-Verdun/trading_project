@@ -8,12 +8,12 @@ from ..utils.json_utils import *
 
 class Bot:
 
-    def __init__(self, stocks_id, date, simulation_time, fixed_commission,
+    def __init__(self, stocks_id, date, initial_quantity, fixed_commission,
                  prop_commission, moving_window, decrease_window, log, initial_account,
                  lower, upper, stock_file, wallet_file, bot_file):
-        self.quantity = 1
+        self.quantity = initial_quantity
         self.stocks_id = stocks_id
-        self.stocks = [Stock(name=stock_id, quantity=1, date=date, simulation_time=simulation_time, fixed_commission=fixed_commission, prop_commission=prop_commission, moving_window=moving_window, decrease_window=decrease_window)
+        self.stocks = [Stock(name=stock_id, quantity=initial_quantity, date=date, fixed_commission=fixed_commission, prop_commission=prop_commission, moving_window=moving_window, decrease_window=decrease_window)
                        for stock_id in self.stocks_id]
         self.wallet = Wallet(self.stocks, initial_account)
         self.initial_account = initial_account
@@ -35,11 +35,50 @@ class Bot:
 
     def load_state(self, date):
         """
-        recuperer les données nécessaires à faire repartir le bot dans son état de base et relancer la production
+        Gather data from JSON files and update class instances with the stored data
         """
         bot = read_json(self.bot_file)
+        stock = read_json(self.stock_file)
+        wallet = read_json(self.wallet_file)
+
+        print("\nBOT : \n")
+        print_json(bot)
+        print("\nStock : \n")
+        print_json(stock)
+        print("\nWallet : \n")
+        print_json(wallet)
+
+        if bot["already_loaded"]:
+            print("Already loaded, values updating")
+            # update stocks
+            for stock_ins in self.stocks:
+                stock_ins.initdata(stock[stock_ins.getName()])
+            # udpate wallet
+            self.wallet.initdata(wallet)
+            # update bot
+            self.quantity = bot["initial_quantity"]
+            self.stocks_id = bot["stocks_id"]
+            self.initial_account = bot["initial_account"]
+            self.last_account = bot["last_account"]
+            self.total_commission = bot["total_commission"]
+            self.total_transaction = bot["total_transaction"]
+            self.lower = bot["lower"]
+            self.upper = bot["upper"]
+
+        return
+
+    def check_not_already_ran(self, date):
+        """
+        Check if the bot has already been ran at the date date
+        """
+        bot = read_json(self.bot_file)
+        print("check_not_already_ran : ", bot["storage_date"], date)
+        return bot["storage_date"] != date
 
     def store_state(self, date):
+        """
+        Store the different class state in the JSON files
+        """
         write_json(self.wallet_file, {
             "virtual_account": self.wallet.virtual_account,
             "available_cash": self.wallet.available_cash,
@@ -61,10 +100,21 @@ class Bot:
         write_json(self.stock_file, stock_content)
 
         bot_content = {
-
+            "already_loaded": True,
+            "initial_quantity": self.quantity,
+            "stocks_id": self.stocks_id,
+            "initial_account": self.initial_account,
+            "last_account": self.last_account,
+            "total_commission": self.total_commission,
+            "total_transaction": self.total_transaction,
+            "lower": self.lower,
+            "upper": self.upper,
+            "storage_date": date
         }
 
         write_json(self.bot_file, bot_content)
+
+        return
 
     def run(self, date, strategy_name, log):
         """

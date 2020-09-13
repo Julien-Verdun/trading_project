@@ -12,8 +12,8 @@ from src.utils.json_utils import *
 
 
 DEFAULT_STOCKS = ["MSFT", "ADP", "ATOS", "TSLA", "AAPL", "AIR", "OR"]
+DEFAULT_INITIAL_QUANTITY = 1
 DEFAULT_TIMELAPSE = 1 * 3600
-DEFAULT_SIMULATION_TIME = 40
 # strategy
 DEFAULT_STRATEGY = "naive"
 # naive strategy parameters
@@ -40,38 +40,30 @@ def RunBot():
     lui donner en argument les fichier stock et wallet pour les initialiser la ou on les a laissé
     """
 
-    # load file and pass data to bot
-
     # box initialisation
-    bot = Bot(args.stocks, timestamp_to_date(t0), args.simulation_time,
+    bot = Bot(args.stocks, timestamp_to_date(t0), args.initial_quantity,
               args.fixed_commission, args.prop_commission, args.moving_window,
               args.decrease_window, args.log, args.initial_account, args.lower, args.upper,
               args.stock_file, args.wallet_file, args.bot_file)
 
-    bot.run(timestamp_to_date(t0),
-            args.strategy, args.log)
+    bot.load_state(timestamp_to_date(t0))
 
-    # every 24 hours
-    while True:
-        while timestamp_to_date(time.time()) == timestamp_to_date(t0):
-            time.sleep(args.timelapse)
-            print("Waiting for the next day : ",
-                  timestamp_to_date(time.time()))
-        if args.log:
-            print("Day : ", timestamp_to_date(t0))
+    if bot.check_not_already_ran(timestamp_to_date(t0)):
         bot.run(timestamp_to_date(t0),
                 args.strategy, args.log)
+        if args.log:
+            print("RUN : ", timestamp_to_date(t0))
+
         bot.store_state(timestamp_to_date(t0))
         bot.stock_state(timestamp_to_date(t0))
 
-    bot.stock_state(timestamp_to_date(t0))
-
-    # if args.log:
-    print("Bilan de la simulation : ")
-    print("Montant initial : ", bot.initial_account)
-    print("Montant final : ", bot.last_account)
-    print("Total commissions : ", bot.total_commission)
-    print("Total transactions : ", bot.total_transaction)
+        print("Day assessment : ")
+        print("Initial amount : ", bot.initial_account)
+        print("Final amount : ", bot.last_account)
+        print("Total commissions : ", bot.total_commission)
+        print("Total transactions : ", bot.total_transaction)
+    else:
+        print("Day already ran")
 
 
 def main():
@@ -80,10 +72,10 @@ def main():
 
     parser.add_argument("--stocks", type=str, nargs="+",
                         default=DEFAULT_STOCKS)
+    parser.add_argument("--initial_quantity", type=int,
+                        default=DEFAULT_INITIAL_QUANTITY)
     parser.add_argument("--timelapse", type=float,
                         default=DEFAULT_TIMELAPSE)
-    parser.add_argument("--simulation_time", type=int,
-                        default=DEFAULT_SIMULATION_TIME)
     parser.add_argument("--strategy", type=str, default=DEFAULT_STRATEGY)
     # naive strategy parameters
     parser.add_argument("--lower", type=int, default=DEFAULT_LOWER)
