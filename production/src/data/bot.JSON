@@ -1,0 +1,20 @@
+{
+ "already_loaded": true,
+ "initial_quantity": 1,
+ "stocks_id": [
+  "MSFT",
+  "ADP",
+  "ATOS",
+  "TSLA",
+  "AAPL",
+  "AIR",
+  "OR"
+ ],
+ "initial_account": 3000,
+ "last_account": 3000,
+ "total_commission": 0,
+ "total_transaction": 0,
+ "lower": -2,
+ "upper": 2,
+ "storage_date": "2020-09-13"
+}

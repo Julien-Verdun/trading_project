@@ -5,7 +5,7 @@ class Wallet:
         for stock in stocks:
             self.stocks_amount += stock.getCostPrice()
         self.available_cash = initial_account - \
-            self.stocks_amount  # argent disponible en cash
+            self.stocks_amount  # available account in cash
 
         self.virtual_account = initial_account
         self.total_commission = 0

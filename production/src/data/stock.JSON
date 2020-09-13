@@ -1,0 +1,37 @@
+{
+ "MSFT": {
+  "quantity": 1,
+  "cost_price": 0,
+  "storage_date": "2020-09-13"
+ },
+ "ADP": {
+  "quantity": 1,
+  "cost_price": 0,
+  "storage_date": "2020-09-13"
+ },
+ "ATOS": {
+  "quantity": 1,
+  "cost_price": 0,
+  "storage_date": "2020-09-13"
+ },
+ "TSLA": {
+  "quantity": 1,
+  "cost_price": 0,
+  "storage_date": "2020-09-13"
+ },
+ "AAPL": {
+  "quantity": 1,
+  "cost_price": 0,
+  "storage_date": "2020-09-13"
+ },
+ "AIR": {
+  "quantity": 1,
+  "cost_price": 0,
+  "storage_date": "2020-09-13"
+ },
+ "OR": {
+  "quantity": 1,
+  "cost_price": 0,
+  "storage_date": "2020-09-13"
+ }
+}

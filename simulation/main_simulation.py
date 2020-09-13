@@ -9,54 +9,46 @@ from src.components.bot import Bot
 import argparse
 from src.utils.time_utils import *
 from src.utils.json_utils import *
+import sys
 
 
 DEFAULT_STOCKS = ["MSFT", "ADP", "ATOS", "TSLA", "AAPL", "AIR", "OR"]
-DEFAULT_TIMELAPSE = 1 * 3600
+DEFAULT_INITIAL_QUANTITY = 1
 DEFAULT_SIMULATION_TIME = 40
-# strategy
+DEFAULT_TIMELAPSE = 0.1
+DEFAULT_SIMULATION_DATE = "2020-01-01"
 DEFAULT_STRATEGY = "naive"
 # naive strategy parameters
 DEFAULT_LOWER = -2
-DEFAULT_UPPER = 2
+DEFAULT_UPPER = 5
 DEFAULT_MOVING_WINDOW = 30
 DEFAULT_DECREASE_WINDOW = 3
-# commission fees
+# commission
 DEFAULT_FIXED_COMMISSION = 3
 DEFAULT_PROP_COMISSION = 0.02
-# state storage files
-DEFAULT_STOCK_FILE = "./src/stock.JSON"
-DEFAULT_WALLET_FILE = "./src/wallet.JSON"
 # inital account amont
 DEFAULT_INITIAL_ACCOUNT = 3000
 
 
 def RunBot():
     # time initialisation
-    t0 = time.time()
-    """
-    Initialisation du bot avec un JSON ?
-    lui donner en argument les fichier stock et wallet pour les initialiser la ou on les a laissé
-    """
+    t0 = date_to_timestamp(args.simulation_date)
+    i = 0
+    print("Hi")
     # box initialisation
-    bot = Bot(args.stocks, timestamp_to_date(t0), args.simulation_time,
+    bot = Bot(args.stocks, timestamp_to_date(t0), args.initial_quantity, args.simulation_time,
               args.fixed_commission, args.prop_commission, args.moving_window, args.decrease_window, args.log, args.initial_account, args.lower, args.upper)
 
-    bot.run(timestamp_to_date(t0),
-            args.strategy, args.log)
-
-    # every 24 hours
-    while True:
-        while timestamp_to_date(time.time()) == timestamp_to_date(t0):
-            time.sleep(args.timelapse)
-            print("Waiting for the next day : ",
-                  timestamp_to_date(time.time()))
+    # every timestep secondes
+    while i < args.simulation_time:
+        t0 += 24 * 3600
         if args.log:
             print("Day : ", timestamp_to_date(t0))
         bot.run(timestamp_to_date(t0),
                 args.strategy, args.log)
-        bot.store_state(timestamp_to_date(t0))
-        bot.stock_state(timestamp_to_date(t0))
+        time.sleep(args.timelapse)
+        # bot.store_state(timestamp_to_date(t0))
+        i += 1
 
     bot.stock_state(timestamp_to_date(t0))
 
@@ -74,10 +66,14 @@ def main():
 
     parser.add_argument("--stocks", type=str, nargs="+",
                         default=DEFAULT_STOCKS)
-    parser.add_argument("--timelapse", type=float,
-                        default=DEFAULT_TIMELAPSE)
+    parser.add_argument("--initial_quantity", type=int,
+                        default=DEFAULT_INITIAL_QUANTITY)
     parser.add_argument("--simulation_time", type=int,
                         default=DEFAULT_SIMULATION_TIME)
+    parser.add_argument("--timelapse", type=float,
+                        default=DEFAULT_TIMELAPSE)
+    parser.add_argument("--simulation_date", type=str,
+                        default=DEFAULT_SIMULATION_DATE)
     parser.add_argument("--strategy", type=str, default=DEFAULT_STRATEGY)
     # naive strategy parameters
     parser.add_argument("--lower", type=int, default=DEFAULT_LOWER)
@@ -93,11 +89,6 @@ def main():
                         default=DEFAULT_FIXED_COMMISSION)
     parser.add_argument("--prop_commission", type=float,
                         default=DEFAULT_PROP_COMISSION)
-
-    parser.add_argument("--stock_file", type=str,
-                        default=DEFAULT_STOCK_FILE)
-    parser.add_argument("--wallet_file", type=str,
-                        default=DEFAULT_WALLET_FILE)
     parser.add_argument("--initial_account", type=float,
                         default=DEFAULT_INITIAL_ACCOUNT)
 

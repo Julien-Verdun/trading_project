@@ -1,0 +1,9 @@
+{
+ "virtual_account": 3000,
+ "available_cash": 3000,
+ "stocks_amount": 0,
+ "last_account": 3000,
+ "total_commission": 0,
+ "total_transaction": 0,
+ "storage_date": "2020-09-13"
+}

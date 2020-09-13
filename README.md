@@ -14,18 +14,48 @@ Creation of a trading bot.
 
 For this project we use **yfinance** API of Python.
 
-In a command prompt, run the command :
-
-########################## Mettre ici
-les choses a mettre dans la ligne de commande ##############
+In a command prompt, in either **simulation** or **production** folder, run the command line :
 
 ```
-python main.py [strategy]
+python main_simulation.py
 ```
+
+or
+
+```
+python main_production.py
+```
+
+following by the parameters below :
+
+- `--stocks` _arg_ : arg is one or more stock's names (for example "MSFT ADP ATOS")
+- `--timelapse` _arg_ : arg is the time, in second, that the bot is waiting between every day of the simulation
+- `--simulation_time` _arg_ : arg is the total simulation duration in days
+- `--simulation_date` _arg_ : arg is the date of the first day of the simulation (for example "2020-01-01")
+- `--strategy` _arg_ : arg is the name of the choosen strategy (naive, classic, ml)
+- `--lower` _arg_ : arg is the lower bound parameter of the naive strategy
+- `--upper` _arg_ : arg is the upper bound parameter of the naive strategy
+- `--moving_window` _arg_ : arg is the size (in days) of the moving window parameter of the naive strategy
+- `--decrease_window` _arg_ : arg is the size (in days) of the decrease window parameter of the naive strategy
+- `--log` : used to display more informations about the simulation
+- `--fixed_commission` _arg_ : arg is the amount, in euros, of the fixed commission, applied to every transaction
+- `--prop_commission` _arg_ : arg is the rate, of the proportinnal commission applied to every transaction
+- `--bot_file` _arg_ : arg is the name of the file which includes bot parameters
+- `--stock_file` _arg_ : arg is the name of the file which includes stock parameters
+- `--wallet_file` _arg_ : arg is the name of the file which includes wallet parameters
+- `--initial_account` _arg_ : arg is the initial amount available in the wallet
+
+For example, if you run the command line
+
+```
+python main_simulation.py --log --strategy naive --lower -3 upper 6
+```
+
+you will run the simulation, with every logs and the naive strategy with parameters -3 and 6.
 
 with strategy the strategy name :
 
-- classic
+- classic :
 - naive
 
 #
@@ -65,9 +95,11 @@ In a first time, we decided to model all those fees, simply with 2 components :
 
 and those fees are debited every single time a stock is bought or sold. The choosen values are overestimated to make sure in a real simulation we won't lose money.
 
-## Simulation VS Production
+## Simulation
 
 We decided to implement first a bot able to simulate several days or months of the stocks market very quickly. The limiting factor in our project is the API time request. In fact, our strategies compute the prediction very quickly, but to get the result from a request to the API, it almost takes few seconds.
 To simulate quickly the result of our strategies on a year of stock market's data, we decided to get the data from the API only once, at the initilisation of the class.
 
-(expliquer la suite avec la prod)
+## Production
+
+Explain \_\_\_\_ production

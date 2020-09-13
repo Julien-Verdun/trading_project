@@ -1,6 +1,5 @@
 import yfinance as yf
 import time
-#from configuration import *
 import matplotlib.pyplot as plt
 import numpy as np
 from ..utils.time_utils import *
@@ -12,9 +11,10 @@ class Stock:
     with an API
     """
 
-    def __init__(self, name, date, simulation_time, fixed_commission, prop_commission, moving_window, decrease_window, quantity=0):
+    def __init__(self, name, date, fixed_commission,
+                 prop_commission, moving_window, decrease_window, quantity=0):
         self.__name = name
-        self.__owned = True 
+        self.__owned = True
         self.__quantity = quantity
         self.__cost_price = 0
         # in euros
@@ -30,9 +30,14 @@ class Stock:
 
         self.__history = self.__stock.history(
             start=increase_date(date, -(moving_window + decrease_window)),
-            end=increase_date(date, simulation_time+2)
+            end=increase_date(date, -1)
         )
         self.__historical_data = self.getCloseData()
+        return
+
+    def initdata(self, stock):
+        self.__quantity = stock["quantity"]
+        self.__cost_price = stock["cost_price"]
         return
 
     def show(self, date):
@@ -106,14 +111,11 @@ class Stock:
         avg_gain, avg_loss = abs(np.mean(pos_var)), abs(np.mean(neg_var))
         return 100 * avg_gain / (avg_gain + avg_loss)
 
-
     def getStoch(self, date, nb_days):
         historical_data = self.getHistoryToDate(date, nb_days)
         close_values = historical_data["Variation"].tolist()
         last_close = close_values[-1]
         return 100 * ((last_close - min(close_values)) / (max(close_values) - min(close_values)))
-
-
 
     def isDecreasingStock(self, date):
         """
@@ -242,7 +244,6 @@ class Stock:
             return None
         # sell all the stocks
         elif quantity == self.getQuantity():
-            print("good quantity")
             self.setOwned(False)
             self.setQuantity(0)
             self.setCostPrice(0)
@@ -263,4 +264,3 @@ class Stock:
         plt.xlabel("Date")
         plt.ylabel("Price ($) ")
         plt.show()
-
