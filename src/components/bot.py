@@ -56,9 +56,9 @@ class Bot:
         if self.stocks[0].getDateValue(date):
             if strategy_name == "naive":
                 strategy = StrategyNaive(
-                    self.stocks, date, self.initial_account, self.lower, self.upper)
+                    self.stocks, date, self.wallet.available_cash, self.lower, self.upper)
             else:
-                strategy = Strategy(self.stocks, date, 1000, 0.7, 0.3)
+                strategy = Strategy(self.stocks, date, 1000, 0.7, 0.3, self.wallet.available_cash)
             strats = strategy.run()
 
             self.wallet.save_last_account()
