@@ -202,6 +202,12 @@ class Stock:
         """
         return self.__historical_data.loc[increase_date(date, - nb_days):date]
 
+    def getFullHistoryToDate(self, date, nb_days):
+        """
+        Same as getHistoryToDate but it returns the columns HIGH LOW OPEN CLOSE
+        """
+        return self.__history[["High", "Low", "Open", "Close"]].loc[increase_date(date, - nb_days):date]
+
     def getSupport(self):
         return
 

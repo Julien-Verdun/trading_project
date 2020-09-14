@@ -1,5 +1,6 @@
 from .stock import Stock
-from strategy.strategy import Strategy
+from strategy.strategy_ml import StrategyML
+from strategy.strategy import Strategy 
 from strategy.strategy_naive import StrategyNaive
 from .wallet import Wallet
 from ..utils.time_utils import *
@@ -72,6 +73,8 @@ class Bot:
             if strategy_name == "naive":
                 strategy = StrategyNaive(
                     self.stocks, date, self.initial_account, self.lower, self.upper)
+            elif strategy_name == "ml":
+                strategy = StrategyML(self.stocks, date, 3000)
             else:
                 strategy = Strategy(self.stocks, date, 1000, 0.7, 0.3)
             strats = strategy.run()
