@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from .stock import Stock
-from strategy.strategy import Strategy
+from strategy.strategy_ml import StrategyML
+from strategy.strategy import Strategy 
 from strategy.strategy_naive import StrategyNaive
 from .wallet import Wallet
 from ..utils.time_utils import *
@@ -73,8 +74,10 @@ class Bot:
             if strategy_name == "naive":
                 strategy = StrategyNaive(
                     self.stocks, date, self.initial_account, self.lower, self.upper)
+            elif strategy_name == "ml":
+                strategy = StrategyML(self.stocks, date, 3000)
             else:
-                strategy = Strategy(self.stocks, date, 1000, 0.7, 0.3)
+                strategy = Strategy(self.stocks, date, 1000, 0.7, 0.3, self.wallet.available_cash)
             strats = strategy.run()
 
             self.wallet.save_last_account()
@@ -84,7 +87,8 @@ class Bot:
                 if strat[0] == "buy" and strat[1] > 0 and self.wallet.buying_autorisation(i, strat[1], date):
                     if log:
                         print(
-                            "Buy " + str(strat[1]) + " stock(s) of " + self.stocks[i].getName())
+                            "Buy " + str(strat[1]) + " stock(s) of " + self.stocks[i].getName()
+                            + " : " + str(strat[1] * self.stocks[i].getDateValue(date)) + " euros")
                     self.wallet.buy(i, date, int(strat[1]))
                     self.stocks[i].buy(
                         int(strat[1]), self.stocks[i].getDateValue(date))
@@ -96,8 +100,8 @@ class Bot:
                     if sell is not None:
                         self.wallet.sell(i, date)
                         if log:
-                            print(
-                                "Sell " + str(self.stocks[i].getQuantity()) + " stock(s) of " + self.stocks[i].getName())
+                            print("Sell " + str(strat[1]) + " stock(s) of " + self.stocks[i].getName()
+                                  + " : " + str(strat[1] * self.stocks[i].getDateValue(date)) + " euros")
 
                 else:
                     if log:
