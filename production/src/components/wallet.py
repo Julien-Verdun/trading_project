@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+
+
 class Wallet:
 
     def __init__(self, stocks, initial_account=3000):

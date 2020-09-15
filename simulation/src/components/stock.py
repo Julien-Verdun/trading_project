@@ -1,6 +1,6 @@
+# -*- coding: utf-8 -*-
 import yfinance as yf
 import time
-import matplotlib.pyplot as plt
 import numpy as np
 from ..utils.time_utils import *
 
@@ -245,16 +245,3 @@ class Stock:
         else:
             self.setQuantity(self.getQuantity()-quantity)
         return "sold"
-
-    def plot(self):
-        """
-        Plot the evolution of the stock's price among time
-        """
-        plt.figure()
-        plt.plot(self.__historical_data["Close"], '--*')
-        plt.plot(self.getHistory().index, [self.getCostPrice(
-        ) for k in range(len(self.getHistory().index))], '-')
-        plt.title(self.getName() + " : Stock evolution")
-        plt.xlabel("Date")
-        plt.ylabel("Price ($) ")
-        plt.show()

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 In the main file, the class are initialized and the bot
 checks the market at regular time interval and buy and sell

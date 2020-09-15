@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from .stock import Stock
 from strategy.strategy import Strategy
 from strategy.strategy_naive import StrategyNaive
