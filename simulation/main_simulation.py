@@ -44,7 +44,7 @@ def RunBot():
     while i < args.simulation_time:
         t0 += 24 * 3600
         if args.log:
-            print("Day : ", timestamp_to_date(t0))
+            print("\n\nDay : ", timestamp_to_date(t0), "\n")
         bot.run(timestamp_to_date(t0),
                 args.strategy, args.log)
         time.sleep(args.timelapse)

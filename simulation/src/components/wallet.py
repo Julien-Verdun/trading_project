@@ -27,6 +27,13 @@ class Wallet:
         # enough to cash buy stock's quantity, taking commissions into account
         return self.available_cash > quantity * (self.stocks[i].getDateValue(date) * (1 + self.stocks[i].getPropCommission()) + self.stocks[i].getFixedCommission())
 
+
+    '''
+    The 2 following methods are not used anymore : the update of wallet is now made in stock.sell and stock.buy
+    These should be deleted ?
+    '''
+
+
     def sell(self, i, date):
         """
         This method is called when the bot sells i stocks. The commission is updated and

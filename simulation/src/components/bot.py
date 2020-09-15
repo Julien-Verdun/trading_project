@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from .stock import Stock
-from strategy.strategy_ml import StrategyML
+#from strategy.strategy_ml import StrategyML
 from strategy.strategy import Strategy 
 from strategy.strategy_naive import StrategyNaive
 from .wallet import Wallet
@@ -26,9 +26,10 @@ class Bot:
     def stock_state(self, date):
         for stock in self.stocks:
             print(stock.show(date))
-        print("Available cash", self.wallet.available_cash)
-        print("Stocks amount", self.wallet.stocks_amount)
+        print("Available cash : ", self.wallet.available_cash)
+        print("Stocks amount : ", self.wallet.stocks_amount)
         return
+
 
     # def store_state(self, date):
     #     write_json("./src/data/wallet.JSON", {
@@ -70,6 +71,11 @@ class Bot:
         Run strategy and update wallet 
         """
 
+        if log:
+            print("\nOpen : \nWallet account : " + str(self.wallet.virtual_account)
+                  + "\nStocks amount : " + str(self.wallet.stocks_amount) + "\nAvailable cash : "
+                  + str(self.wallet.available_cash) + "\n")
+
         if self.stocks[0].getDateValue(date):
             if strategy_name == "naive":
                 strategy = StrategyNaive(
@@ -84,28 +90,30 @@ class Bot:
 
             for i, strat in enumerate(strats):
                 # if the strategie says "buy" and the amount is available
+                stock = self.stocks[i]
                 if strat[0] == "buy" and strat[1] > 0 and self.wallet.buying_autorisation(i, strat[1], date):
+                    stock.buy(int(strat[1]), self.wallet, stock.getDateValue(date))
                     if log:
                         print(
-                            "Buy " + str(strat[1]) + " stock(s) of " + self.stocks[i].getName()
-                            + " : " + str(strat[1] * self.stocks[i].getDateValue(date)) + " euros")
-                    self.wallet.buy(i, date, int(strat[1]))
-                    self.stocks[i].buy(
-                        int(strat[1]), self.stocks[i].getDateValue(date))
+                            stock.getName() + " (" + str(stock.getQuantity()) + "|" +
+                            str(stock.getDateValue(date)) + ")"
+                            + " : Buy " + str(strat[1]) + " stock(s)" +
+                            " -> +" + str(strat[1] * stock.getDateValue(date)) + " euros")
 
                 # if the strategie says "sell"
-                elif strat[0] == "sell" and self.stocks[i].getQuantity() > 0 and strat[1] > 0:
-
-                    sell = self.stocks[i].sell(int(strat[1]))
+                elif strat[0] == "sell" and stock.getQuantity() > 0 and strat[1] > 0:
+                    sell = stock.sell(self.wallet, stock.getDateValue(date), quantity=int(strat[1]))
                     if sell is not None:
-                        self.wallet.sell(i, date)
                         if log:
-                            print("Sell " + str(strat[1]) + " stock(s) of " + self.stocks[i].getName()
-                                  + " : " + str(strat[1] * self.stocks[i].getDateValue(date)) + " euros")
+                            print(stock.getName() + " (" + str(stock.getQuantity()) + "|" +
+                                  str(stock.getDateValue(date)) + ")" +
+                                  " : Sell " + str(strat[1]) + " stock(s)" +
+                                  " -> -" + str(strat[1] * stock.getDateValue(date)) + " euros")
 
                 else:
                     if log:
-                        print("No go")
+                        print(stock.getName() + " (" + str(stock.getQuantity()) + "|" +
+                              str(stock.getDateValue(date)) + ")" + " : No go")
 
             self.wallet.update(date)
 
@@ -114,7 +122,9 @@ class Bot:
             self.total_transaction = self.wallet.total_transaction
 
             if log:
-                print("Date : ", date, "Wallet account : ", self.wallet.virtual_account, ", Stocks amount : ", self.wallet.stocks_amount, ", Available cash : ", self.wallet.available_cash, "\nVariation with previous day : ",
-                      int(10000*(self.wallet.virtual_account-self.wallet.last_account)/self.wallet.virtual_account)/100)
+                print("\nClose : \nWallet account : " + str(self.wallet.virtual_account)
+                      + "\nStocks amount : " + str(self.wallet.stocks_amount) + "\nAvailable cash : "
+                      + str(self.wallet.available_cash) + "\nVariation with previous day : "
+                      + str(100*((self.wallet.virtual_account-self.wallet.last_account)/self.wallet.virtual_account)) + "\n")
         # else:
         #     print(date, " is not a trading day ! ")

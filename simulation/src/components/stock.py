@@ -32,6 +32,11 @@ class Stock:
             end=increase_date(date, simulation_time+2)
         )
         self.__historical_data = self.getCloseData()
+        self.initCostPrice(date)
+        return
+
+    def initCostPrice(self, date):
+        self.__cost_price = self.getDateValue(date)
         return
 
     def show(self, date):
@@ -220,7 +225,7 @@ class Stock:
         """
         return self.getQuantity()*(self.getDateValue(date)-self.getCostPrice())
 
-    def buy(self, quantity, price):
+    def buy(self, quantity, wallet, price):
         """
         Whenever the stock is bought, the price and the quantity is updated with the
         new quantiy and price
@@ -229,13 +234,22 @@ class Stock:
             self.setOwned(True)
             self.setQuantity(quantity)
             self.setCostPrice(price)
+
         else:
             self.setCostPrice((self.getQuantity()*self.getCostPrice() +
                                quantity * price)/(quantity+self.getQuantity()))
             self.setQuantity(quantity+self.getQuantity())
+
+        # Update of the wallet below
+
+        wallet.total_commission += quantity * price * self.getPropCommission() + self.getFixedCommission()
+        wallet.available_cash -= quantity * (price * (
+                1 + self.getPropCommission()) + self.getFixedCommission())
+        wallet.total_transaction += 1
+
         return
 
-    def sell(self, quantity=None):
+    def sell(self, wallet, price, quantity=None):
         """
         Whenever the stock is sold, the quantity is updated with the
         new quantiy
@@ -247,7 +261,13 @@ class Stock:
             self.setOwned(False)
             self.setQuantity(0)
             self.setCostPrice(0)
+            wallet.total_commission += quantity * price * self.getPropCommission() + self.getFixedCommission()
+            wallet.available_cash += quantity * price * (1 - self.getPropCommission()) - self.getFixedCommission()
+            wallet.total_transaction += 1
         # stell part of the stocks
         else:
             self.setQuantity(self.getQuantity()-quantity)
+            wallet.total_commission += quantity * price * self.getPropCommission() + self.getFixedCommission()
+            wallet.available_cash += quantity * price * (1 - self.getPropCommission()) - self.getFixedCommission()
+            wallet.total_transaction += 1
         return "sold"
